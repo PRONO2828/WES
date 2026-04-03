@@ -28,6 +28,17 @@ Full guide:
 
 - [DEPLOY_ANYWHERE.md](/C:/Users/Administrator/Documents/New%20project%204/docs/DEPLOY_ANYWHERE.md)
 
+## Oracle Always Free Option
+
+If you want a low-cost or free VM-based deployment instead of Render or Railway, use:
+
+- [DEPLOY_ORACLE_ALWAYS_FREE.md](/C:/Users/Administrator/Documents/New%20project%204/docs/DEPLOY_ORACLE_ALWAYS_FREE.md)
+
+Helper scripts for the Oracle VM:
+
+- [run-wes-fsm.sh](/C:/Users/Administrator/Documents/New%20project%204/deploy/oracle/run-wes-fsm.sh)
+- [update-wes-fsm.sh](/C:/Users/Administrator/Documents/New%20project%204/deploy/oracle/update-wes-fsm.sh)
+
 ## Repository Safety
 
 This repository is prepared for publishing:
