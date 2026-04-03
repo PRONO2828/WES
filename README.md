@@ -11,6 +11,10 @@ WES Field Service Management application with:
 
 This repository includes a ready-to-use [render.yaml](/C:/Users/Administrator/Documents/New%20project%204/render.yaml) for deploying the web app and API publicly from GitHub.
 
+One-click deploy:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/PRONO2828/WES)
+
 Quick path:
 
 1. Push this repository to GitHub.
