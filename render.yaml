@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: wes-fsm
+    runtime: docker
+    plan: starter
+    autoDeployTrigger: commit
+    healthCheckPath: /api/health
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: PORT
+        value: "4000"
+      - key: STATIC_ROOT
+        value: /app
+      - key: JWT_SECRET
+        generateValue: true
+      - key: WES_FSM_LOGIN_PASSWORD
+        sync: false
+    disk:
+      name: wes-fsm-data
+      mountPath: /app/database
+      sizeGB: 1

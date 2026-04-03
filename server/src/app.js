@@ -20,6 +20,14 @@ dotenv.config();
 const app = express();
 const allowedOrigins = createAllowedOrigins(process.env.CLIENT_ORIGIN);
 const staticRoot = resolveStaticRoot(process.env.STATIC_ROOT);
+const mobileAppOrigins = [
+  "http://localhost",
+  "https://localhost",
+  "http://127.0.0.1",
+  "https://127.0.0.1",
+  "capacitor://localhost",
+  "ionic://localhost"
+];
 
 function createAllowedOrigins(value) {
   const entries = String(value || "")
@@ -27,6 +35,11 @@ function createAllowedOrigins(value) {
     .map((entry) => entry.trim())
     .filter(Boolean);
   const origins = new Set(entries);
+
+  for (const origin of mobileAppOrigins) {
+    origins.add(origin);
+  }
+
   for (const entry of entries) {
     try {
       const url = new URL(entry);
