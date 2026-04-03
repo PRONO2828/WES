@@ -1,0 +1,13 @@
+{
+  "appId": "ke.co.wesengineering.fsm",
+  "appName": "WES FSM",
+  "webDir": "dist",
+  "backgroundColor": "#0d151c",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

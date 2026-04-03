@@ -1,0 +1,11 @@
+node_modules
+client/node_modules
+server/node_modules
+client/android/.gradle
+client/android/app/build
+client/dist
+.git
+*.log
+tmp-*
+.chrome-headless
+.edge-headless

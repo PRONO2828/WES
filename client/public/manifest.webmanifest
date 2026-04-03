@@ -1,0 +1,22 @@
+{
+  "name": "WES Field Service Management",
+  "short_name": "WES FSM",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d151c",
+  "theme_color": "#0d151c",
+  "icons": [
+    {
+      "src": "/wes-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/wes-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

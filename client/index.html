@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d151c" />
+    <base href="./" />
+    <title>WES Field Service Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <script src="./mobile-config.js"></script>
+    <style>
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        background: #0d151c;
+        color: #f3f7fb;
+        font-family: "Public Sans", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+      }
+
+      #root {
+        min-height: 100vh;
+      }
+
+      .boot-shell {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        box-sizing: border-box;
+        background:
+          radial-gradient(circle at top, rgba(63, 120, 255, 0.18), transparent 38%),
+          linear-gradient(180deg, #101b25 0%, #0d151c 100%);
+      }
+
+      .boot-card {
+        width: min(100%, 460px);
+        padding: 28px 24px;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(10, 17, 24, 0.88);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+      }
+
+      .boot-eyebrow {
+        margin: 0 0 10px;
+        color: #8fb3d9;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .boot-card h1 {
+        margin: 0 0 12px;
+        font-size: 28px;
+        line-height: 1.15;
+      }
+
+      .boot-card p {
+        margin: 0;
+        color: rgba(243, 247, 251, 0.84);
+        line-height: 1.6;
+      }
+
+      .boot-detail {
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #bcd0e6;
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .boot-shell.hidden {
+        display: none;
+      }
+    </style>
+    <script>
+      (() => {
+        const bootTimeoutMs = 15000;
+
+        function showBoot(title, message, detail = "") {
+          const shell = document.getElementById("bootShell");
+          const titleNode = document.getElementById("bootTitle");
+          const messageNode = document.getElementById("bootMessage");
+          const detailNode = document.getElementById("bootDetail");
+          if (!shell || !titleNode || !messageNode || !detailNode) {
+            return;
+          }
+          titleNode.textContent = title;
+          messageNode.textContent = message;
+          detailNode.textContent = detail;
+          detailNode.style.display = detail ? "block" : "none";
+          shell.classList.remove("hidden");
+        }
+
+        function hideBootIfMounted() {
+          const root = document.getElementById("root");
+          const shell = document.getElementById("bootShell");
+          if (!root || !shell) {
+            return;
+          }
+          if (root.childElementCount > 0 || root.textContent.trim()) {
+            shell.classList.add("hidden");
+          }
+        }
+
+        window.addEventListener("error", (event) => {
+          const target = event.target;
+          if (target && target.tagName === "SCRIPT") {
+            showBoot(
+              "App Files Did Not Load",
+              "WES FSM could not load its startup files on this device.",
+              "The mobile bundle failed to load. This usually means the app could not resolve its JS assets."
+            );
+            return;
+          }
+
+          const detail = event.error?.stack || event.message || "Unknown startup error";
+          showBoot(
+            "App Failed To Start",
+            "WES FSM hit a startup error before the workspace could open.",
+            detail
+          );
+        });
+
+        window.addEventListener("unhandledrejection", (event) => {
+          const reason = event.reason;
+          const detail =
+            reason?.stack ||
+            reason?.message ||
+            (typeof reason === "string" ? reason : "Unhandled promise rejection");
+          showBoot(
+            "Startup Request Failed",
+            "The app started, but one of its startup tasks crashed before the screen rendered.",
+            detail
+          );
+        });
+
+        window.addEventListener("load", () => {
+          window.setTimeout(() => {
+            hideBootIfMounted();
+            const root = document.getElementById("root");
+            if (root && root.childElementCount === 0 && !root.textContent.trim()) {
+              showBoot(
+                "Still Loading",
+                "WES FSM is taking longer than expected to open on this device.",
+                "If this continues, the device may be failing to load the app bundle or using an older WebView."
+              );
+            }
+          }, bootTimeoutMs);
+        });
+
+        new MutationObserver(hideBootIfMounted).observe(document.documentElement, {
+          childList: true,
+          subtree: true
+        });
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-BoSrZqv9.js?v=20260402-fix1"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CHyFpMhi.css?v=20260402-fix1">
+  </head>
+  <body>
+    <div class="boot-shell" id="bootShell">
+      <div class="boot-card">
+        <p class="boot-eyebrow">WES FSM</p>
+        <h1 id="bootTitle">Starting Workspace</h1>
+        <p id="bootMessage">Loading the field service app.</p>
+        <p class="boot-detail" id="bootDetail" style="display: none;"></p>
+      </div>
+    </div>
+    <div id="root"></div>
+  </body>
+</html>

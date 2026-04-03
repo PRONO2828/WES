@@ -1,0 +1,444 @@
+﻿{
+    "meta":  {
+                 "createdAt":  "2026-03-30T21:03:44.502Z",
+                 "updatedAt":  "2026-03-30T21:03:44.502Z",
+                 "version":  1
+             },
+    "users":  [
+                  {
+                      "id":  "usr-admin-001",
+                      "fullName":  "WES Manager Admin",
+                      "email":  "admin@wesmanager.local",
+                      "role":  "admin",
+                      "createdAt":  "2026-03-30T21:03:44.502Z",
+                      "updatedAt":  "2026-03-30T21:03:44.502Z"
+                  },
+                  {
+                      "id":  "usr-sales-001",
+                      "fullName":  "WES Manager Sales",
+                      "email":  "sales@wesmanager.local",
+                      "role":  "sales",
+                      "createdAt":  "2026-03-30T21:03:44.502Z",
+                      "updatedAt":  "2026-03-30T21:03:44.502Z"
+                  }
+              ],
+    "settings":  {
+                     "id":  "cfg-001",
+                     "companyName":  "WES Manager",
+                     "logoText":  "WES Manager",
+                     "addressLine1":  "Industrial Park, Enterprise Road",
+                     "addressLine2":  "Nairobi",
+                     "city":  "Nairobi",
+                     "country":  "Kenya",
+                     "email":  "accounts@wesmanager.local",
+                     "phone":  "+254 700 100 200",
+                     "website":  "www.wesmanager.local",
+                     "taxId":  "WES-TAX-24001",
+                     "currencyCode":  "USD",
+                     "currencySymbol":  "$",
+                     "currencyPosition":  "prefix",
+                     "decimalPlaces":  2,
+                     "defaultTaxRate":  16,
+                     "taxLabel":  "VAT",
+                     "paymentTerms":  "Payment due within 14 days of invoice date.",
+                     "invoicePrefix":  "INV",
+                     "quotePrefix":  "EST",
+                     "paymentPrefix":  "PAY",
+                     "updatedAt":  "2026-03-30T21:03:44.502Z"
+                 },
+    "clients":  [
+                    {
+                        "id":  "cli-001",
+                        "displayName":  "Atlas Pump Systems",
+                        "contactName":  "Grace Njeri",
+                        "email":  "grace@atlaspumps.co.ke",
+                        "phone":  "+254 711 000 100",
+                        "address":  "7 Powerline Avenue",
+                        "city":  "Nairobi",
+                        "country":  "Kenya",
+                        "notes":  "Prefers bank transfer and PDF copies by email.",
+                        "createdAt":  "2026-03-30T21:03:44.502Z",
+                        "updatedAt":  "2026-03-30T21:03:44.502Z"
+                    },
+                    {
+                        "id":  "cli-002",
+                        "displayName":  "Rift Valley Fabricators",
+                        "contactName":  "Paul Kiprono",
+                        "email":  "paul@rvf.co.ke",
+                        "phone":  "+254 722 000 200",
+                        "address":  "18 Industrial Close",
+                        "city":  "Nakuru",
+                        "country":  "Kenya",
+                        "notes":  "Quarterly maintenance contract.",
+                        "createdAt":  "2026-03-30T21:03:44.502Z",
+                        "updatedAt":  "2026-03-30T21:03:44.502Z"
+                    },
+                    {
+                        "id":  "cli-003",
+                        "displayName":  "Coastal Utility Works",
+                        "contactName":  "Amina Noor",
+                        "email":  "amina@coastalutility.co.ke",
+                        "phone":  "+254 733 000 300",
+                        "address":  "44 Port Access Road",
+                        "city":  "Mombasa",
+                        "country":  "Kenya",
+                        "notes":  "Needs quote approval before dispatch.",
+                        "createdAt":  "2026-03-30T21:03:44.502Z",
+                        "updatedAt":  "2026-03-30T21:03:44.502Z"
+                    },
+                    {
+                        "id":  "cli-004",
+                        "displayName":  "Highland Water Estates",
+                        "contactName":  "Peter Mwangi",
+                        "email":  "pmwangi@highlandwater.co.ke",
+                        "phone":  "+254 744 000 400",
+                        "address":  "9 Ridge View Drive",
+                        "city":  "Naivasha",
+                        "country":  "Kenya",
+                        "notes":  "Monthly recurring service billing.",
+                        "createdAt":  "2026-03-30T21:03:44.502Z",
+                        "updatedAt":  "2026-03-30T21:03:44.502Z"
+                    }
+                ],
+    "products":  [
+                     {
+                         "id":  "prd-001",
+                         "name":  "Pump Maintenance Service",
+                         "sku":  "WES-PMS-001",
+                         "description":  "Routine inspection, cleaning, and recommissioning.",
+                         "unit":  "service",
+                         "unitPrice":  450,
+                         "defaultTaxRate":  16,
+                         "createdAt":  "2026-03-30T21:03:44.502Z",
+                         "updatedAt":  "2026-03-30T21:03:44.502Z"
+                     },
+                     {
+                         "id":  "prd-002",
+                         "name":  "Electrical Inspection",
+                         "sku":  "WES-ELE-002",
+                         "description":  "Control panel and motor protection inspection.",
+                         "unit":  "service",
+                         "unitPrice":  180,
+                         "defaultTaxRate":  16,
+                         "createdAt":  "2026-03-30T21:03:44.502Z",
+                         "updatedAt":  "2026-03-30T21:03:44.502Z"
+                     },
+                     {
+                         "id":  "prd-003",
+                         "name":  "Filter Media Replacement",
+                         "sku":  "WES-FMR-003",
+                         "description":  "Supply and replace treatment media.",
+                         "unit":  "set",
+                         "unitPrice":  320,
+                         "defaultTaxRate":  16,
+                         "createdAt":  "2026-03-30T21:03:44.502Z",
+                         "updatedAt":  "2026-03-30T21:03:44.502Z"
+                     },
+                     {
+                         "id":  "prd-004",
+                         "name":  "Site Installation Support",
+                         "sku":  "WES-SIS-004",
+                         "description":  "On-site installation labour.",
+                         "unit":  "day",
+                         "unitPrice":  275,
+                         "defaultTaxRate":  16,
+                         "createdAt":  "2026-03-30T21:03:44.502Z",
+                         "updatedAt":  "2026-03-30T21:03:44.502Z"
+                     },
+                     {
+                         "id":  "prd-005",
+                         "name":  "Water Quality Audit",
+                         "sku":  "WES-WQA-005",
+                         "description":  "Sampling, analysis, and compliance report.",
+                         "unit":  "audit",
+                         "unitPrice":  390,
+                         "defaultTaxRate":  16,
+                         "createdAt":  "2026-03-30T21:03:44.502Z",
+                         "updatedAt":  "2026-03-30T21:03:44.502Z"
+                     }
+                 ],
+    "invoices":  [
+                     {
+                         "id":  "inv-1001",
+                         "invoiceNumber":  "INV-2026-1001",
+                         "clientId":  "cli-001",
+                         "manualStatus":  "sent",
+                         "issueDate":  "2026-03-03",
+                         "dueDate":  "2026-03-17",
+                         "reference":  "PO-4478",
+                         "notes":  "Thank you for trusting WES Manager.",
+                         "terms":  "Payment due within 14 days of invoice date.",
+                         "currencyCode":  "USD",
+                         "sourceQuoteId":  null,
+                         "createdBy":  "usr-admin-001",
+                         "lineItems":  [
+                                           {
+                                               "id":  "inv-1001-item-1",
+                                               "productId":  "prd-001",
+                                               "description":  "Pump Maintenance Service",
+                                               "unit":  "service",
+                                               "quantity":  2,
+                                               "unitPrice":  450,
+                                               "taxRate":  16,
+                                               "discountRate":  0
+                                           },
+                                           {
+                                               "id":  "inv-1001-item-2",
+                                               "productId":  "prd-002",
+                                               "description":  "Electrical Inspection",
+                                               "unit":  "service",
+                                               "quantity":  1,
+                                               "unitPrice":  180,
+                                               "taxRate":  16,
+                                               "discountRate":  0
+                                           }
+                                       ],
+                         "createdAt":  "2026-03-03T08:00:00.000Z",
+                         "updatedAt":  "2026-03-03T08:00:00.000Z"
+                     },
+                     {
+                         "id":  "inv-1002",
+                         "invoiceNumber":  "INV-2026-1002",
+                         "clientId":  "cli-002",
+                         "manualStatus":  "sent",
+                         "issueDate":  "2026-03-10",
+                         "dueDate":  "2026-03-24",
+                         "reference":  "RVF-MAR-24",
+                         "notes":  "Quarterly service labour and replacement media.",
+                         "terms":  "Payment due within 14 days of invoice date.",
+                         "currencyCode":  "USD",
+                         "sourceQuoteId":  null,
+                         "createdBy":  "usr-sales-001",
+                         "lineItems":  [
+                                           {
+                                               "id":  "inv-1002-item-1",
+                                               "productId":  "prd-003",
+                                               "description":  "Filter Media Replacement",
+                                               "unit":  "set",
+                                               "quantity":  3,
+                                               "unitPrice":  320,
+                                               "taxRate":  16,
+                                               "discountRate":  0
+                                           },
+                                           {
+                                               "id":  "inv-1002-item-2",
+                                               "productId":  "prd-004",
+                                               "description":  "Site Installation Support",
+                                               "unit":  "day",
+                                               "quantity":  2,
+                                               "unitPrice":  275,
+                                               "taxRate":  16,
+                                               "discountRate":  0
+                                           }
+                                       ],
+                         "createdAt":  "2026-03-10T08:00:00.000Z",
+                         "updatedAt":  "2026-03-10T08:00:00.000Z"
+                     },
+                     {
+                         "id":  "inv-1003",
+                         "invoiceNumber":  "INV-2026-1003",
+                         "clientId":  "cli-003",
+                         "manualStatus":  "sent",
+                         "issueDate":  "2026-03-20",
+                         "dueDate":  "2026-04-03",
+                         "reference":  "CUW-PORT-91",
+                         "notes":  "Advance payment recorded against inspection and audit services.",
+                         "terms":  "Payment due within 14 days of invoice date.",
+                         "currencyCode":  "USD",
+                         "sourceQuoteId":  null,
+                         "createdBy":  "usr-admin-001",
+                         "lineItems":  [
+                                           {
+                                               "id":  "inv-1003-item-1",
+                                               "productId":  "prd-002",
+                                               "description":  "Electrical Inspection",
+                                               "unit":  "service",
+                                               "quantity":  1,
+                                               "unitPrice":  180,
+                                               "taxRate":  16,
+                                               "discountRate":  0
+                                           },
+                                           {
+                                               "id":  "inv-1003-item-2",
+                                               "productId":  "prd-005",
+                                               "description":  "Water Quality Audit",
+                                               "unit":  "audit",
+                                               "quantity":  2,
+                                               "unitPrice":  390,
+                                               "taxRate":  16,
+                                               "discountRate":  0
+                                           }
+                                       ],
+                         "createdAt":  "2026-03-20T08:00:00.000Z",
+                         "updatedAt":  "2026-03-20T08:00:00.000Z"
+                     },
+                     {
+                         "id":  "inv-1004",
+                         "invoiceNumber":  "INV-2026-1004",
+                         "clientId":  "cli-004",
+                         "manualStatus":  "draft",
+                         "issueDate":  "2026-03-28",
+                         "dueDate":  "2026-04-11",
+                         "reference":  "HWE-MONTHLY",
+                         "notes":  "Draft invoice prepared from the monthly service cycle.",
+                         "terms":  "Payment due within 14 days of invoice date.",
+                         "currencyCode":  "USD",
+                         "sourceQuoteId":  null,
+                         "createdBy":  "usr-sales-001",
+                         "lineItems":  [
+                                           {
+                                               "id":  "inv-1004-item-1",
+                                               "productId":  "prd-001",
+                                               "description":  "Pump Maintenance Service",
+                                               "unit":  "service",
+                                               "quantity":  1,
+                                               "unitPrice":  450,
+                                               "taxRate":  16,
+                                               "discountRate":  0
+                                           }
+                                       ],
+                         "createdAt":  "2026-03-28T08:00:00.000Z",
+                         "updatedAt":  "2026-03-28T08:00:00.000Z"
+                     }
+                 ],
+    "quotes":  [
+                   {
+                       "id":  "quo-2001",
+                       "quoteNumber":  "EST-2026-2001",
+                       "clientId":  "cli-003",
+                       "status":  "sent",
+                       "issueDate":  "2026-03-18",
+                       "validUntil":  "2026-04-05",
+                       "reference":  "CUW-Q-19",
+                       "notes":  "Estimate for emergency coastal utility works support.",
+                       "terms":  "Estimate valid for 14 days.",
+                       "currencyCode":  "USD",
+                       "convertedInvoiceId":  null,
+                       "createdBy":  "usr-admin-001",
+                       "lineItems":  [
+                                         {
+                                             "id":  "quo-2001-item-1",
+                                             "productId":  "prd-004",
+                                             "description":  "Site Installation Support",
+                                             "unit":  "day",
+                                             "quantity":  3,
+                                             "unitPrice":  275,
+                                             "taxRate":  16,
+                                             "discountRate":  0
+                                         },
+                                         {
+                                             "id":  "quo-2001-item-2",
+                                             "productId":  "prd-005",
+                                             "description":  "Water Quality Audit",
+                                             "unit":  "audit",
+                                             "quantity":  1,
+                                             "unitPrice":  390,
+                                             "taxRate":  16,
+                                             "discountRate":  0
+                                         }
+                                     ],
+                       "createdAt":  "2026-03-18T09:00:00.000Z",
+                       "updatedAt":  "2026-03-18T09:00:00.000Z"
+                   },
+                   {
+                       "id":  "quo-2002",
+                       "quoteNumber":  "EST-2026-2002",
+                       "clientId":  "cli-001",
+                       "status":  "draft",
+                       "issueDate":  "2026-03-26",
+                       "validUntil":  "2026-04-12",
+                       "reference":  "ATLAS-UPGRADE",
+                       "notes":  "Draft estimate for plant upgrade support.",
+                       "terms":  "Estimate valid for 14 days.",
+                       "currencyCode":  "USD",
+                       "convertedInvoiceId":  null,
+                       "createdBy":  "usr-sales-001",
+                       "lineItems":  [
+                                         {
+                                             "id":  "quo-2002-item-1",
+                                             "productId":  "prd-004",
+                                             "description":  "Site Installation Support",
+                                             "unit":  "day",
+                                             "quantity":  4,
+                                             "unitPrice":  275,
+                                             "taxRate":  16,
+                                             "discountRate":  5
+                                         }
+                                     ],
+                       "createdAt":  "2026-03-26T09:00:00.000Z",
+                       "updatedAt":  "2026-03-26T09:00:00.000Z"
+                   }
+               ],
+    "payments":  [
+                     {
+                         "id":  "pay-3001",
+                         "paymentNumber":  "PAY-2026-3001",
+                         "invoiceId":  "inv-1001",
+                         "clientId":  "cli-001",
+                         "paymentDate":  "2026-03-10",
+                         "paymentMethod":  "Bank Transfer",
+                         "amount":  1252.8,
+                         "reference":  "RTGS-4478",
+                         "notes":  "Settlement received in full.",
+                         "createdBy":  "usr-admin-001",
+                         "createdAt":  "2026-03-10T12:10:00.000Z",
+                         "updatedAt":  "2026-03-10T12:10:00.000Z"
+                     },
+                     {
+                         "id":  "pay-3002",
+                         "paymentNumber":  "PAY-2026-3002",
+                         "invoiceId":  "inv-1003",
+                         "clientId":  "cli-003",
+                         "paymentDate":  "2026-03-23",
+                         "paymentMethod":  "Cash",
+                         "amount":  300,
+                         "reference":  "ADV-91",
+                         "notes":  "Advance payment received on site.",
+                         "createdBy":  "usr-sales-001",
+                         "createdAt":  "2026-03-23T11:30:00.000Z",
+                         "updatedAt":  "2026-03-23T11:30:00.000Z"
+                     }
+                 ],
+    "recurringProfiles":  [
+                              {
+                                  "id":  "rec-4001",
+                                  "profileNumber":  "REC-2026-4001",
+                                  "title":  "Highland Monthly Maintenance",
+                                  "clientId":  "cli-004",
+                                  "status":  "active",
+                                  "frequency":  "monthly",
+                                  "intervalCount":  1,
+                                  "nextRunDate":  "2026-04-01",
+                                  "paymentTermDays":  14,
+                                  "reference":  "HWE-REC",
+                                  "notes":  "Automatic monthly site maintenance billing.",
+                                  "terms":  "Payment due within 14 days of invoice date.",
+                                  "currencyCode":  "USD",
+                                  "createdBy":  "usr-admin-001",
+                                  "lastGeneratedAt":  "2026-03-01T08:00:00.000Z",
+                                  "lineItems":  [
+                                                    {
+                                                        "id":  "rec-4001-item-1",
+                                                        "productId":  "prd-001",
+                                                        "description":  "Pump Maintenance Service",
+                                                        "unit":  "service",
+                                                        "quantity":  1,
+                                                        "unitPrice":  450,
+                                                        "taxRate":  16,
+                                                        "discountRate":  0
+                                                    }
+                                                ],
+                                  "createdAt":  "2026-03-01T08:00:00.000Z",
+                                  "updatedAt":  "2026-03-01T08:00:00.000Z"
+                              }
+                          ],
+    "counters":  {
+                     "client":  5,
+                     "product":  6,
+                     "invoice":  1005,
+                     "quote":  2003,
+                     "payment":  3003,
+                     "recurring":  4002
+                 }
+}
+

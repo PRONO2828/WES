@@ -1,0 +1,43 @@
+<svg width="980" height="300" viewBox="0 0 980 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F5F8FC"/>
+      <stop offset="0.28" stop-color="#DCE4EE"/>
+      <stop offset="0.54" stop-color="#AEBBCB"/>
+      <stop offset="0.78" stop-color="#F8FBFF"/>
+      <stop offset="1" stop-color="#8E99A8"/>
+    </linearGradient>
+    <linearGradient id="silverSoft" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E8EEF7"/>
+      <stop offset="0.5" stop-color="#9EABBB"/>
+      <stop offset="1" stop-color="#F8FBFF"/>
+    </linearGradient>
+    <linearGradient id="deepBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0D4B9A"/>
+      <stop offset="1" stop-color="#082D66"/>
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="980" height="300" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#001533" flood-opacity="0.26"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <g transform="translate(42 28)">
+      <circle cx="108" cy="108" r="88" stroke="url(#silver)" stroke-width="16" opacity="0.92"/>
+      <circle cx="108" cy="108" r="61" stroke="url(#silverSoft)" stroke-width="14" opacity="0.94"/>
+      <path d="M42 92C64 44 118 22 165 36C145 36 125 41 107 52C80 68 63 95 58 126C48 116 42 104 42 92Z" fill="url(#silver)"/>
+      <path d="M69 49C120 35 174 58 200 105C188 90 172 79 154 73C124 63 93 65 65 78C65 67 66 58 69 49Z" fill="url(#silverSoft)"/>
+      <path d="M197 79C224 125 217 184 180 223C186 204 188 185 183 166C175 136 157 110 132 92C143 86 155 81 167 79H197Z" fill="url(#silver)"/>
+      <path d="M173 227C123 242 70 220 42 175C55 189 71 200 89 207C118 218 150 216 178 203C178 212 176 220 173 227Z" fill="url(#silverSoft)"/>
+      <path d="M28 136C37 190 77 236 127 246C108 238 92 226 79 211C58 187 47 157 49 127C41 129 34 132 28 136Z" fill="url(#deepBlue)" opacity="0.46"/>
+      <circle cx="108" cy="108" r="22" fill="url(#deepBlue)" opacity="0.7"/>
+    </g>
+
+    <g transform="translate(265 46)">
+      <text x="0" y="118" fill="url(#silver)" font-size="138" font-weight="700" font-family="Rajdhani, Arial, sans-serif" letter-spacing="3">WES</text>
+      <text x="6" y="166" fill="#F2F6FB" font-size="38" font-weight="700" font-family="Public Sans, Arial, sans-serif">&amp; GENERAL ENGINEERING LTD</text>
+      <rect x="4" y="188" width="584" height="2" rx="1" fill="url(#silverSoft)" opacity="0.46"/>
+      <text x="8" y="226" fill="#A9C8F0" font-size="28" font-weight="500" font-family="Public Sans, Arial, sans-serif" letter-spacing="5">ENGINEERING THE FUTURE OF WATER AND ENERGY</text>
+    </g>
+  </g>
+</svg>

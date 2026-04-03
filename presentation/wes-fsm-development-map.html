@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WES FSM Development Map</title>
+    <style>
+      :root {
+        --bg: #08111a;
+        --page: #0d1823;
+        --page2: #102030;
+        --paper: #f3efe7;
+        --text: #edf5f9;
+        --ink: #10202f;
+        --muted: #9eb2c2;
+        --line: rgba(255,255,255,.12);
+        --line2: rgba(255,255,255,.22);
+        --panel: rgba(255,255,255,.06);
+        --accent: #f3a33b;
+        --blue: #43b1ef;
+        --green: #31c48d;
+        --red: #f36f6f;
+        --shadow: 0 28px 60px rgba(0,0,0,.28);
+      }
+      * { box-sizing: border-box; }
+      @page { size: A4 landscape; margin: 0; }
+      html, body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(243,163,59,.14), transparent 24%),
+          radial-gradient(circle at top right, rgba(67,177,239,.14), transparent 26%),
+          linear-gradient(180deg, #08111a 0%, #0b1620 100%);
+        color: var(--text);
+      }
+      body { padding: 18px 0 32px; }
+      .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        padding: 12px 22px;
+        background: rgba(8,17,26,.84);
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        backdrop-filter: blur(12px);
+      }
+      .toolbar a, .toolbar button {
+        border: 1px solid rgba(255,255,255,.16);
+        border-radius: 999px;
+        padding: 10px 16px;
+        background: rgba(255,255,255,.06);
+        color: #fff;
+        font-size: 13px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .toolbar .download {
+        background: rgba(243,163,59,.14);
+        border-color: rgba(243,163,59,.34);
+      }
+      .deck {
+        display: grid;
+        gap: 18px;
+        width: min(1320px, calc(100vw - 28px));
+        margin: 18px auto 0;
+      }
+      .page {
+        width: 297mm;
+        min-height: 210mm;
+        margin: 0 auto;
+        padding: 16mm 16mm 14mm;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,.08);
+        box-shadow: var(--shadow);
+        background:
+          linear-gradient(145deg, rgba(255,255,255,.03), transparent 42%),
+          linear-gradient(180deg, var(--page) 0%, var(--page2) 100%);
+      }
+      .page.paper {
+        color: var(--ink);
+        background:
+          linear-gradient(145deg, rgba(255,255,255,.56), rgba(255,255,255,.2)),
+          linear-gradient(180deg, var(--paper) 0%, #ebe5d8 100%);
+      }
+      .page::before {
+        content: "";
+        position: absolute;
+        inset: auto -140px -140px auto;
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(circle, rgba(67,177,239,.16), transparent 70%);
+        pointer-events: none;
+      }
+      .page.paper::before { background: radial-gradient(circle, rgba(243,163,59,.18), transparent 70%); }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .brand { display: grid; gap: 8px; }
+      .eyebrow {
+        margin: 0;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: .28em;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .page.paper .eyebrow { color: #b56c0f; }
+      h1, h2, h3, p { margin: 0; }
+      h1, h2 {
+        font-family: "Arial Black", "Segoe UI", sans-serif;
+        letter-spacing: .02em;
+        line-height: 1.08;
+      }
+      h1 { font-size: 26px; max-width: 760px; }
+      h2 { font-size: 22px; }
+      h3 { font-size: 14px; line-height: 1.2; }
+      .lede, .small, .note, .mini-card p, .feedback p, .layer p, .phase p {
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.45;
+      }
+      .lede { max-width: 780px; font-size: 13px; margin-top: 10px; }
+      .page.paper .lede, .page.paper .small, .page.paper .note, .page.paper .layer p, .page.paper .phase p {
+        color: #445566;
+      }
+      .meta { display: grid; gap: 8px; min-width: 210px; }
+      .meta-card, .feedback, .layer, .phase {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 10px 12px;
+        background: rgba(255,255,255,.05);
+      }
+      .page.paper .meta-card, .page.paper .layer, .page.paper .phase { background: rgba(255,255,255,.46); border-color: rgba(50,70,90,.12); }
+      .meta-card strong, .mini-card strong, .feedback strong, .layer strong, .phase strong {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+      .meta-card strong { color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: .12em; }
+      .page.paper .meta-card strong { color: #b56c0f; }
+      .stage-strip {
+        display: grid;
+        grid-template-columns: 1fr 26px 1fr 26px 1fr 26px 1fr 26px 1fr;
+        margin-top: 14px;
+        align-items: stretch;
+      }
+      .stage {
+        display: grid;
+        gap: 10px;
+        min-height: 125mm;
+        padding: 14px 14px 12px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--panel);
+      }
+      .a { background: linear-gradient(180deg, rgba(67,177,239,.16), rgba(255,255,255,.05)); }
+      .b { background: linear-gradient(180deg, rgba(243,163,59,.16), rgba(255,255,255,.05)); }
+      .c { background: linear-gradient(180deg, rgba(49,196,141,.16), rgba(255,255,255,.05)); }
+      .d { background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05)); }
+      .e { background: linear-gradient(180deg, rgba(243,163,59,.12), rgba(67,177,239,.08)); }
+      .stage-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .row, .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+      .chip, .pill {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 4px 9px;
+        border: 1px solid var(--line2);
+        background: rgba(255,255,255,.06);
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+      }
+      .admin { color: #ffd08e; }
+      .field { color: #83d7ff; }
+      .workshop { color: #9be8cb; }
+      .system { color: #d7e2eb; }
+      .decision { color: #ffd08e; background: rgba(243,163,59,.14); }
+      .num {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        background: rgba(255,255,255,.12);
+        border: 1px solid rgba(255,255,255,.18);
+      }
+      .stack { display: grid; gap: 8px; }
+      .mini-card {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 10px 11px;
+        background: rgba(255,255,255,.04);
+      }
+      .arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: rgba(255,255,255,.42);
+        font-weight: 700;
+      }
+      .feedback-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .layers { display: grid; gap: 8px; margin-top: 16px; }
+      .layer-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+      }
+      .flow-down {
+        display: flex;
+        justify-content: center;
+        color: rgba(255,255,255,.44);
+        font-size: 18px;
+        line-height: 1;
+      }
+      .page.paper .flow-down { color: rgba(16,32,47,.36); }
+      .status-strip {
+        display: grid;
+        grid-template-columns: 1fr 28px 1fr 28px 1fr 28px 1fr 28px 1fr;
+        margin-top: 12px;
+        align-items: center;
+      }
+      .status-node {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 10px;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        background: rgba(255,255,255,.06);
+      }
+      .pending { background: rgba(243,163,59,.12); }
+      .progress { background: rgba(67,177,239,.12); }
+      .complete { background: rgba(255,255,255,.08); }
+      .approved { background: rgba(49,196,141,.14); }
+      .rejected { background: rgba(243,111,111,.14); }
+      .roadmap {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .phase-no {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(243,163,59,.14);
+        color: #9a5600;
+        font-size: 12px;
+        font-weight: 800;
+        border: 1px solid rgba(181,108,15,.18);
+      }
+      .band {
+        margin-top: 10px;
+        border: 1px solid rgba(50,70,90,.12);
+        border-radius: 18px;
+        padding: 10px 12px;
+        background: rgba(255,255,255,.5);
+        font-size: 11px;
+        line-height: 1.5;
+        color: #445566;
+      }
+      .warn { background: rgba(243,163,59,.1); }
+      .good { background: rgba(49,196,141,.1); }
+      .bad { background: rgba(243,111,111,.1); }
+      .footer {
+        position: absolute;
+        left: 16mm;
+        right: 16mm;
+        bottom: 10mm;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+      }
+      .page-no {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: .2em;
+        color: rgba(255,255,255,.45);
+      }
+      .page.paper .page-no { color: rgba(16,32,47,.46); }
+      @media print {
+        body { padding: 0; background: #fff; }
+        .toolbar { display: none; }
+        .deck { width: auto; margin: 0; gap: 0; }
+        .page {
+          width: auto;
+          min-height: auto;
+          margin: 0;
+          border: 0;
+          box-shadow: none;
+          break-after: page;
+        }
+        .page:last-child { break-after: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar">
+      <a class="download" href="./WES-FSM-Development-Map.pdf" download>Download PDF</a>
+      <button type="button" onclick="window.print()">Print / Save PDF</button>
+    </div>
+
+    <main class="deck">
+      <section class="page">
+        <div class="header">
+          <div class="brand">
+            <p class="eyebrow">WES FSM Visual Map</p>
+            <h1>End-to-End Workflow Map For Developing WES Field Service Management</h1>
+            <p class="lede">
+              This page shows how dispatch, field execution, workshop follow-up, review, and report release move from left to
+              right. It is grounded in the current WES FSM workspace flow and the API rules that drive status changes.
+            </p>
+          </div>
+          <div class="meta">
+            <div class="meta-card">
+              <strong>Primary roles</strong>
+              <span class="small">Admin, Technician, Workshop Technician, Review Desk</span>
+            </div>
+            <div class="meta-card">
+              <strong>Main entities</strong>
+              <span class="small">Users, Jobs, Sites, Field Reports, Workshop Reports, Forum Messages</span>
+            </div>
+            <div class="meta-card">
+              <strong>Output</strong>
+              <span class="small">Approved PDF report plus permanent repeat-site history</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-strip">
+          <section class="stage a">
+            <div class="stage-head">
+              <div>
+                <div class="row">
+                  <span class="chip admin">Admin</span>
+                  <span class="chip system">Dashboard</span>
+                </div>
+                <h3>Intake And Context</h3>
+              </div>
+              <span class="num">1</span>
+            </div>
+            <div class="stack">
+              <div class="mini-card">
+                <strong>Login and role gate</strong>
+                <p>Admin enters the office workspace and sees dashboard metrics, technician activity, open jobs, and the review queue.</p>
+              </div>
+              <div class="mini-card">
+                <strong>Search repeat-site history</strong>
+                <p>Before dispatch, office can inspect site history, earlier reports, and workshop records for repeat visits.</p>
+              </div>
+              <div class="mini-card">
+                <strong>Confirm dispatch inputs</strong>
+                <p>Client, contact, service type, location, priority, assigned technician, and repeat-site label are set here.</p>
+              </div>
+            </div>
+          </section>
+          <div class="arrow">-&gt;</div>
+          <section class="stage b">
+            <div class="stage-head">
+              <div>
+                <div class="row">
+                  <span class="chip admin">Admin</span>
+                  <span class="chip system">Jobs</span>
+                </div>
+                <h3>Dispatch And Assignment</h3>
+              </div>
+              <span class="num">2</span>
+            </div>
+            <div class="stack">
+              <div class="mini-card">
+                <strong>Create job</strong>
+                <p><code>POST /jobs</code> creates a new job in <code>Pending</code> and assigns it to a field technician.</p>
+              </div>
+              <div class="mini-card">
+                <strong>Context follows the work</strong>
+                <p><code>GET /jobs/:jobId</code> returns job data, site details, report history, and workshop follow-up.</p>
+              </div>
+              <div class="mini-card">
+                <strong>Side channel stays open</strong>
+                <p>Forum messages and presence updates support handoff notes before the technician starts work.</p>
+              </div>
+            </div>
+          </section>
+          <div class="arrow">-&gt;</div>
+          <section class="stage c">
+            <div class="stage-head">
+              <div>
+                <div class="row">
+                  <span class="chip field">Technician</span>
+                  <span class="chip workshop">Workshop</span>
+                </div>
+                <h3>Field And Workshop Execution</h3>
+              </div>
+              <span class="num">3</span>
+            </div>
+            <div class="stack">
+              <div class="mini-card">
+                <strong>Start job</strong>
+                <p><code>POST /jobs/:jobId/start</code> moves the job from <code>Pending</code> to <code>In Progress</code>.</p>
+              </div>
+              <div class="mini-card">
+                <strong>Capture field evidence</strong>
+                <p>Technician records diagnosis, work done, GPS, measurements, materials, before and after photos, and client signature.</p>
+              </div>
+              <div class="mini-card">
+                <strong>Optional workshop branch</strong>
+                <p><code>POST /jobs/:jobId/workshop-reports</code> logs bench repair details, parts, costs, and workshop photos.</p>
+              </div>
+            </div>
+          </section>
+          <div class="arrow">-&gt;</div>
+          <section class="stage d">
+            <div class="stage-head">
+              <div>
+                <div class="row">
+                  <span class="chip field">Technician</span>
+                  <span class="chip system">Review Queue</span>
+                </div>
+                <h3>Submission And Review</h3>
+              </div>
+              <span class="num">4</span>
+            </div>
+            <div class="stack">
+              <div class="mini-card">
+                <strong>Submit field report</strong>
+                <p><code>POST /jobs/:jobId/reports</code> creates the report as <code>Pending</code> review and moves the job to <code>Completed</code>.</p>
+              </div>
+              <div class="mini-card">
+                <strong>Office review</strong>
+                <p><code>GET /review-queue</code> lets admin review details, site history, workshop follow-up, and evidence.</p>
+              </div>
+              <div class="mini-card">
+                <strong>Decision point</strong>
+                <p><code>POST /reports/:reportId/review</code> sets the review result and controls the next job state.</p>
+              </div>
+            </div>
+          </section>
+          <div class="arrow">-&gt;</div>
+          <section class="stage e">
+            <div class="stage-head">
+              <div>
+                <div class="row">
+                  <span class="chip decision">Decision</span>
+                  <span class="chip system">Output</span>
+                </div>
+                <h3>Release, Feedback, And Reuse</h3>
+              </div>
+              <span class="num">5</span>
+            </div>
+            <div class="stack">
+              <div class="mini-card">
+                <strong>Approved path</strong>
+                <p>Job becomes <code>Approved</code>, the report becomes exportable, and <code>GET /reports/:reportId/export</code> produces the PDF.</p>
+              </div>
+              <div class="mini-card">
+                <strong>Rejected path</strong>
+                <p>Job returns to <code>In Progress</code>, the technician revisits the site, and new evidence re-enters review.</p>
+              </div>
+              <div class="mini-card">
+                <strong>Knowledge retention</strong>
+                <p>Approved reports stay attached to the site, so future repeat visits start with historical context.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="feedback-grid">
+          <div class="feedback warn">
+            <strong>Cross-cutting coordination</strong>
+            <p>Forum messages, SSE updates, and presence tracking support each stage without replacing the core job and report flow.</p>
+          </div>
+          <div class="feedback bad">
+            <strong>Rejection loop</strong>
+            <p><code>Rejected report</code> -> job goes back to <code>In Progress</code> -> technician revisits -> evidence is resubmitted.</p>
+          </div>
+          <div class="feedback good">
+            <strong>Approval loop</strong>
+            <p><code>Approved report</code> -> PDF export -> site history becomes richer -> next repeat-site dispatch starts smarter.</p>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span class="note">Sources: <code>docs/api.md</code>, <code>server/src/data/store.js</code>, <code>server/src/routes/jobs.js</code>, <code>server/src/routes/reports.js</code>, <code>script.js</code></span>
+          <span class="page-no">Page 1</span>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="header">
+          <div class="brand">
+            <p class="eyebrow">WES FSM Development Map</p>
+            <h2>Architecture Flow From UI To API To Data To Output</h2>
+            <p class="lede">
+              Use this page as the developer reference. It shows which screens talk to which routes, which rules mutate state,
+              and where reusable site knowledge is stored and returned.
+            </p>
+          </div>
+          <div class="meta">
+            <div class="meta-card">
+              <strong>Backend service</strong>
+              <span class="small">Express app mounted at <code>/api</code> with auth, jobs, reports, search, users, and forum routes</span>
+            </div>
+            <div class="meta-card">
+              <strong>Current data engine</strong>
+              <span class="small">In-memory seeded store from <code>createStore()</code> with EventEmitter for forum and presence</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="layers">
+          <section class="layer">
+            <div class="layer-head">
+              <strong>1. User-facing surfaces</strong>
+              <span class="chip system">Screens</span>
+            </div>
+            <div class="pills">
+              <span class="pill">Login</span>
+              <span class="pill">Dashboard</span>
+              <span class="pill">Jobs</span>
+              <span class="pill">Field Reports</span>
+              <span class="pill">Approvals</span>
+              <span class="pill">Workshop</span>
+              <span class="pill">Reports Center</span>
+              <span class="pill">Global Search</span>
+              <span class="pill">Forum</span>
+            </div>
+            <p>Admin gets dispatch and approval views. Technicians get assigned jobs, capture, workshop, and their own report-center history.</p>
+          </section>
+
+          <div class="flow-down">v</div>
+
+          <section class="layer">
+            <div class="layer-head">
+              <strong>2. Client state and workflow logic</strong>
+              <span class="chip field">UI orchestration</span>
+            </div>
+            <div class="pills">
+              <span class="pill">Session</span>
+              <span class="pill">Active View</span>
+              <span class="pill">Selected Job</span>
+              <span class="pill">Selected Report</span>
+              <span class="pill">Uploads</span>
+              <span class="pill">Filters</span>
+              <span class="pill">Theme</span>
+              <span class="pill">Navigation History</span>
+            </div>
+            <p>Client logic decides what the current user may see, pins repeat-site history into context panels, and prepares payloads for jobs, reports, review, and workshop follow-up.</p>
+          </section>
+
+          <div class="flow-down">v</div>
+
+          <section class="layer">
+            <div class="layer-head">
+              <strong>3. API contract</strong>
+              <span class="chip admin">Transport layer</span>
+            </div>
+            <div class="pills">
+              <span class="pill">/auth/login</span>
+              <span class="pill">/dashboard</span>
+              <span class="pill">/jobs</span>
+              <span class="pill">/jobs/:jobId/start</span>
+              <span class="pill">/jobs/:jobId/reports</span>
+              <span class="pill">/jobs/:jobId/workshop-reports</span>
+              <span class="pill">/reports</span>
+              <span class="pill">/review-queue</span>
+              <span class="pill">/reports/:reportId/review</span>
+              <span class="pill">/reports/:reportId/export</span>
+              <span class="pill">/sites</span>
+              <span class="pill">/search</span>
+              <span class="pill">/forum/messages</span>
+              <span class="pill">/forum/stream</span>
+              <span class="pill">/users</span>
+            </div>
+            <p>These routes are the stable handoff points between the UI and the domain logic, and they are where future mobile or React clients should connect.</p>
+          </section>
+
+          <div class="flow-down">v</div>
+
+          <section class="layer">
+            <div class="layer-head">
+              <strong>4. Domain rules and state transitions</strong>
+              <span class="chip decision">Business logic</span>
+            </div>
+            <div class="pills">
+              <span class="pill">Role authorization</span>
+              <span class="pill">Job visibility</span>
+              <span class="pill">Repeat-site mapping</span>
+              <span class="pill">Evidence validation</span>
+              <span class="pill">Review decisions</span>
+              <span class="pill">PDF export gate</span>
+              <span class="pill">Forum events</span>
+              <span class="pill">Presence updates</span>
+            </div>
+            <p>The store enforces the important rules: only assigned technicians can start or report on jobs, evidence is mandatory before submission, and only approved reports may export to PDF.</p>
+          </section>
+
+          <div class="flow-down">v</div>
+
+          <section class="layer">
+            <div class="layer-head">
+              <strong>5. Persistence, eventing, and outputs</strong>
+              <span class="chip workshop">Knowledge layer</span>
+            </div>
+            <div class="pills">
+              <span class="pill">Users</span>
+              <span class="pill">Jobs</span>
+              <span class="pill">Sites</span>
+              <span class="pill">Field Reports</span>
+              <span class="pill">Workshop Reports</span>
+              <span class="pill">Activity Logs</span>
+              <span class="pill">Forum Messages</span>
+              <span class="pill">EventEmitter</span>
+              <span class="pill">PDFKit Export</span>
+            </div>
+            <p>Everything ends here: approved reports become PDFs, site history becomes richer, and the same stored data feeds later job context, review context, search results, and dashboards.</p>
+          </section>
+        </div>
+
+        <div class="status-strip">
+          <div class="status-node pending">Job Pending</div>
+          <div class="arrow">-&gt;</div>
+          <div class="status-node progress">In Progress</div>
+          <div class="arrow">-&gt;</div>
+          <div class="status-node complete">Completed + Report Pending</div>
+          <div class="arrow">-&gt;</div>
+          <div class="status-node approved">Approved + Exportable</div>
+          <div class="arrow">&lt;-</div>
+          <div class="status-node rejected">Rejected -> Back To In Progress</div>
+        </div>
+
+        <div class="footer">
+          <span class="note">Architecture intent: keep the job object as the operational anchor, and let reports, workshop work, review, search, and export all hang off that anchor.</span>
+          <span class="page-no">Page 2</span>
+        </div>
+      </section>
+
+      <section class="page paper">
+        <div class="header">
+          <div class="brand">
+            <p class="eyebrow">Build Sequence</p>
+            <h2>Recommended Development Order</h2>
+            <p class="lede">
+              If the team is actively building or refactoring WES FSM, this order reduces rework by establishing the job and site
+              model first, then layering capture, review, collaboration, and hardening on top.
+            </p>
+          </div>
+          <div class="meta">
+            <div class="meta-card">
+              <strong>Team use</strong>
+              <span class="small">Product planning, sprint kickoffs, onboarding, technical reviews, and management explanations</span>
+            </div>
+            <div class="meta-card">
+              <strong>Print note</strong>
+              <span class="small">Designed for A4 landscape PDF printing; scales cleanly for A3 if you need a wall poster</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="roadmap">
+          <section class="phase">
+            <span class="phase-no">1</span>
+            <strong>Foundation</strong>
+            <p>Lock the shared entities first: users, jobs, sites, field reports, workshop reports, review statuses, and role permissions.</p>
+            <div class="pills">
+              <span class="pill">Auth</span>
+              <span class="pill">Roles</span>
+              <span class="pill">Seed data</span>
+              <span class="pill">Status enums</span>
+            </div>
+          </section>
+
+          <section class="phase">
+            <span class="phase-no">2</span>
+            <strong>Dispatch Core</strong>
+            <p>Build dashboard metrics, technician visibility, job creation, job updates, repeat-site lookup, and job detail context.</p>
+            <div class="pills">
+              <span class="pill">Dashboard</span>
+              <span class="pill">Jobs CRUD</span>
+              <span class="pill">Sites</span>
+              <span class="pill">Assignments</span>
+            </div>
+          </section>
+
+          <section class="phase">
+            <span class="phase-no">3</span>
+            <strong>Field Capture</strong>
+            <p>Implement start-job flow, GPS capture, image uploads, measurements, materials, and client signature requirements.</p>
+            <div class="pills">
+              <span class="pill">Start job</span>
+              <span class="pill">Before/after images</span>
+              <span class="pill">Measurements</span>
+              <span class="pill">Signature</span>
+            </div>
+          </section>
+
+          <section class="phase">
+            <span class="phase-no">4</span>
+            <strong>Workshop Branch</strong>
+            <p>Add workshop notes and parts flow without breaking the main field-report path. Keep it additive and linked to the same job.</p>
+            <div class="pills">
+              <span class="pill">Workshop reports</span>
+              <span class="pill">Parts</span>
+              <span class="pill">Costs</span>
+              <span class="pill">Bench photos</span>
+            </div>
+          </section>
+
+          <section class="phase">
+            <span class="phase-no">5</span>
+            <strong>Review And Release</strong>
+            <p>Ship the review queue, review notes, reject or approve decisions, report center, and PDF export once evidence capture is stable.</p>
+            <div class="pills">
+              <span class="pill">Review queue</span>
+              <span class="pill">Approval rules</span>
+              <span class="pill">Report center</span>
+              <span class="pill">PDF export</span>
+            </div>
+          </section>
+
+          <section class="phase">
+            <span class="phase-no">6</span>
+            <strong>Search And Collaboration</strong>
+            <p>Layer in search, forum messaging, presence, and live updates after the core job and report lifecycle is reliable.</p>
+            <div class="pills">
+              <span class="pill">Search</span>
+              <span class="pill">Forum</span>
+              <span class="pill">SSE stream</span>
+              <span class="pill">Presence</span>
+            </div>
+          </section>
+        </div>
+
+        <div class="band">
+          <strong>Dependency path:</strong>
+          Foundation -> Dispatch Core -> Field Capture -> Review And Release.
+          <br />
+          Workshop Branch can grow alongside Field Capture because it still hangs off the job object.
+          <br />
+          Search And Collaboration should read from the existing job and report models instead of inventing parallel data paths.
+          <br />
+          Final hardening after these stages: persistent database, object storage for images, JWT secret management, audit logging, mobile packaging, and deployment.
+        </div>
+
+        <div class="footer">
+          <span class="note">Prepared as a printable development artifact for WES FSM.</span>
+          <span class="page-no">Page 3</span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,1304 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WES Field Service Manager - Executive Presentation</title>
+    <style>
+      :root {
+        --bg: #0b1520;
+        --surface: #122131;
+        --surface-2: #f4f1e9;
+        --ink: #0d1b2a;
+        --text: #eef4f7;
+        --muted: #9eb1bf;
+        --line: rgba(255, 255, 255, 0.14);
+        --brand: #0d3d73;
+        --brand-2: #f2a23a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background:
+          radial-gradient(circle at top right, rgba(44, 88, 140, 0.22), transparent 34%),
+          linear-gradient(180deg, #09111a 0%, #0d1722 100%);
+        color: var(--text);
+      }
+
+      .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        padding: 14px 22px;
+        background: rgba(9, 17, 26, 0.82);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .toolbar a,
+      .toolbar button {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        color: white;
+        text-decoration: none;
+        padding: 10px 16px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .toolbar a.download {
+        background: rgba(242, 162, 58, 0.14);
+        border-color: rgba(242, 162, 58, 0.34);
+      }
+
+      .deck {
+        width: min(1440px, calc(100vw - 40px));
+        margin: 22px auto 40px;
+        display: grid;
+        gap: 26px;
+      }
+
+      .slide {
+        position: relative;
+        min-height: 810px;
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 45%),
+          rgba(11, 21, 32, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 28px;
+        padding: 34px 38px 34px;
+        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.32);
+        overflow: hidden;
+      }
+
+      .slide::after {
+        content: "";
+        position: absolute;
+        inset: auto -100px -100px auto;
+        width: 360px;
+        height: 360px;
+        background: radial-gradient(circle, rgba(13, 61, 115, 0.22), transparent 68%);
+        pointer-events: none;
+      }
+
+      .slide::before {
+        content: "GodfreyDeveloperPresentation";
+        position: absolute;
+        left: 34px;
+        bottom: 28px;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .slide-number {
+        position: absolute;
+        right: 34px;
+        bottom: 28px;
+        font-size: 13px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.45);
+      }
+
+      .brand-row,
+      .split,
+      .triple,
+      .quad {
+        display: grid;
+        gap: 22px;
+      }
+
+      .brand-row {
+        grid-template-columns: 92px 1fr auto;
+        align-items: center;
+      }
+
+      .split {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+
+      .split.equal {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .triple {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .quad {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        font-size: 13px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: #f1b15f;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.04;
+      }
+
+      h1 {
+        font-size: 54px;
+        max-width: 860px;
+      }
+
+      h2 {
+        font-size: 36px;
+        margin-bottom: 18px;
+      }
+
+      h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.55;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .logo {
+        width: 92px;
+        height: 92px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+        object-fit: cover;
+      }
+
+      .title-block p {
+        max-width: 740px;
+      }
+
+      .date-chip {
+        padding: 12px 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 24px;
+        padding: 24px;
+      }
+
+      .card.light {
+        background: linear-gradient(180deg, rgba(244, 241, 233, 0.96), rgba(244, 241, 233, 0.9));
+        color: var(--ink);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .card.light p,
+      .card.light li {
+        color: #415261;
+      }
+
+      .metric-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .metric {
+        padding: 18px 20px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 30px;
+        margin-top: 8px;
+        color: #ffffff;
+      }
+
+      .role-card {
+        min-height: 330px;
+      }
+
+      .role-card strong,
+      .step strong,
+      .callout-list strong,
+      .metric strong,
+      .decision strong {
+        color: #ffffff;
+      }
+
+      .role-card.admin strong {
+        color: #f4c17a;
+      }
+
+      .role-card.tech strong {
+        color: #9ed4ff;
+      }
+
+      .role-list {
+        margin-top: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        font-size: 14px;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 14px;
+        margin-top: 26px;
+      }
+
+      .step {
+        position: relative;
+        padding: 20px 18px 18px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        min-height: 210px;
+      }
+
+      .step span {
+        display: inline-flex;
+        width: 34px;
+        height: 34px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: rgba(242, 162, 58, 0.16);
+        color: #ffd4a1;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+
+      .screenshot-panel {
+        display: grid;
+        grid-template-columns: minmax(340px, 460px) 1fr;
+        gap: 28px;
+        align-items: start;
+      }
+
+      .shot-frame {
+        position: relative;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 26px;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+      }
+
+      .shot-frame img {
+        width: 100%;
+        display: block;
+        border-radius: 18px;
+      }
+
+      .marker {
+        position: absolute;
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: white;
+        background: rgba(13, 61, 115, 0.9);
+        border: 2px solid rgba(255, 255, 255, 0.75);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
+      }
+
+      .callout-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .callout-item {
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        gap: 14px;
+        align-items: start;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .callout-item span {
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: rgba(242, 162, 58, 0.18);
+        color: #ffd4a1;
+        font-weight: 700;
+      }
+
+      .approval-gallery-panel {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 24px;
+        align-items: start;
+      }
+
+      .approval-gallery {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .gallery-card {
+        padding: 16px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .gallery-card h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+
+      .gallery-card p {
+        margin: 12px 0 0;
+      }
+
+      .gallery-shot {
+        height: 220px;
+        overflow: hidden;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .gallery-shot img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .gallery-shot.queue img {
+        object-position: center top;
+      }
+
+      .gallery-shot.notes img {
+        object-position: 82% 31%;
+      }
+
+      .gallery-shot.proof img {
+        object-position: 82% 67%;
+      }
+
+      .gallery-shot.history img {
+        object-position: 82% 92%;
+      }
+
+      .governance-side {
+        display: grid;
+        gap: 14px;
+      }
+
+      .governance-rule {
+        padding: 18px 20px;
+        border-radius: 20px;
+        background: rgba(13, 61, 115, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .phone-frame {
+        max-width: 440px;
+        margin: 0 auto;
+        padding: 18px 16px 18px;
+        border-radius: 36px;
+        background: linear-gradient(180deg, #1a1f28 0%, #0d131a 100%);
+        border: 10px solid #181d25;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+      }
+
+      .phone-frame img {
+        width: 100%;
+        border-radius: 24px;
+        display: block;
+      }
+
+      .stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .architecture {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+      }
+
+      .architecture .card strong,
+      .decision strong {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-top: 24px;
+      }
+
+      .decision {
+        padding: 22px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.55);
+      }
+
+      .small {
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      .accent {
+        color: #f4c17a;
+      }
+
+      @media print {
+        @page {
+          size: A4 landscape;
+          margin: 8mm;
+        }
+
+        html,
+        body {
+          width: 297mm;
+        }
+
+        body {
+          background: #0c1520;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
+        .toolbar {
+          display: none;
+        }
+
+        .deck {
+          width: 100%;
+          margin: 0;
+          gap: 0;
+        }
+
+        .slide {
+          width: 100%;
+          min-height: 190mm;
+          height: 190mm;
+          padding: 10mm 12mm;
+          border-radius: 0;
+          box-shadow: none;
+          break-inside: avoid;
+          page-break-after: always;
+          break-after: page;
+          overflow: hidden;
+        }
+
+        .slide::after {
+          width: 72mm;
+          height: 72mm;
+        }
+
+        .slide::before,
+        .slide-number {
+          bottom: 8mm;
+          font-size: 9px;
+          letter-spacing: 0.08em;
+        }
+
+        .slide::before {
+          left: 12mm;
+        }
+
+        .slide-number {
+          right: 12mm;
+        }
+
+        h1 {
+          font-size: 36px;
+          max-width: none;
+        }
+
+        h2 {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
+
+        h3 {
+          font-size: 15px;
+          margin-bottom: 6px;
+        }
+
+        p,
+        li {
+          font-size: 11px;
+          line-height: 1.32;
+        }
+
+        .small {
+          font-size: 10px;
+          line-height: 1.28;
+        }
+
+        .eyebrow {
+          font-size: 9px;
+          margin-bottom: 4px;
+        }
+
+        .brand-row {
+          grid-template-columns: 58px 1fr auto;
+          gap: 12px;
+        }
+
+        .logo {
+          width: 58px;
+          height: 58px;
+          border-radius: 12px;
+        }
+
+        .date-chip {
+          padding: 7px 10px;
+          border-radius: 12px;
+          font-size: 10px;
+        }
+
+        .metric-strip {
+          gap: 8px;
+          margin-top: 12px;
+        }
+
+        .metric {
+          padding: 10px 12px;
+          border-radius: 12px;
+        }
+
+        .metric strong {
+          font-size: 18px;
+          margin-top: 4px;
+        }
+
+        .card {
+          padding: 12px;
+          border-radius: 16px;
+        }
+
+        .role-card {
+          min-height: auto;
+        }
+
+        .role-list {
+          margin-top: 8px;
+          gap: 6px;
+        }
+
+        .chip {
+          padding: 4px 8px;
+          font-size: 10px;
+        }
+
+        .triple,
+        .quad,
+        .split,
+        .split.equal,
+        .screenshot-panel,
+        .approval-gallery-panel {
+          gap: 12px;
+        }
+
+        .steps {
+          gap: 8px;
+          margin-top: 10px;
+        }
+
+        .step {
+          min-height: auto;
+          padding: 10px;
+          border-radius: 14px;
+        }
+
+        .step span {
+          width: 22px;
+          height: 22px;
+          margin-bottom: 6px;
+          font-size: 10px;
+        }
+
+        .screenshot-panel {
+          grid-template-columns: 0.95fr 1.05fr;
+        }
+
+        .shot-frame {
+          padding: 8px;
+          border-radius: 16px;
+        }
+
+        .shot-frame img {
+          width: 100%;
+          max-height: 118mm;
+          object-fit: contain;
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.02);
+        }
+
+        .marker {
+          width: 22px;
+          height: 22px;
+          border-width: 1px;
+          font-size: 10px;
+        }
+
+        .callout-list,
+        .governance-side,
+        .stack {
+          gap: 8px;
+        }
+
+        .callout-item {
+          grid-template-columns: 28px 1fr;
+          gap: 8px;
+          padding: 10px 12px;
+          border-radius: 12px;
+        }
+
+        .callout-item span {
+          width: 22px;
+          height: 22px;
+          font-size: 10px;
+        }
+
+        .approval-gallery-panel {
+          grid-template-columns: 1.1fr 0.9fr;
+        }
+
+        .approval-gallery {
+          gap: 10px;
+        }
+
+        .gallery-card {
+          padding: 10px;
+          border-radius: 14px;
+        }
+
+        .gallery-card h3 {
+          font-size: 13px;
+          margin-bottom: 6px;
+        }
+
+        .gallery-card p {
+          margin-top: 8px;
+        }
+
+        .gallery-shot {
+          height: 36mm;
+          border-radius: 12px;
+        }
+
+        .governance-rule,
+        .decision {
+          padding: 12px;
+          border-radius: 14px;
+        }
+
+        .phone-frame {
+          max-width: 82mm;
+          padding: 10px;
+          border-width: 6px;
+          border-radius: 22px;
+        }
+
+        .phone-frame img {
+          max-height: 112mm;
+          object-fit: contain;
+        }
+
+        .architecture {
+          gap: 8px;
+        }
+
+        .decision-grid {
+          gap: 10px;
+          margin-top: 10px;
+        }
+
+        .footer-note {
+          margin-top: 8px;
+          font-size: 10px;
+        }
+
+        .slide:last-child {
+          page-break-after: auto;
+          break-after: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar">
+      <a href="./WES-Executive-Presentation-Notes.md">Open Speaker Notes</a>
+      <a class="download" href="./WES-Executive-Presentation.zip" download>Download Deck Package</a>
+      <a class="download" href="./wes-management-presentation.html" download="WES-Executive-Presentation.html">Download HTML</a>
+      <button id="download-pdf" onclick="downloadPresentationPdf()">Download PDF</button>
+      <button onclick="window.print()">Print / Save PDF</button>
+    </div>
+
+    <main class="deck">
+      <section class="slide">
+        <div class="brand-row">
+          <img class="logo" src="../wes-logo.png" alt="WES logo" />
+          <div class="title-block">
+            <p class="eyebrow">Executive Presentation</p>
+            <h1>WES Field Service Manager</h1>
+            <p>
+              A mobile-first field operations platform for borehole, solar, and water treatment work.
+              It gives WES one system for dispatch, field evidence, technician control, approvals, and
+              repeat-site intelligence.
+            </p>
+          </div>
+          <div class="date-chip">Prepared for WES Management<br />31 March 2026</div>
+        </div>
+
+        <div class="metric-strip">
+          <div class="metric">
+            Operational Control
+            <strong>Admin Command Center</strong>
+          </div>
+          <div class="metric">
+            Field Execution
+            <strong>Technician Job Flow</strong>
+          </div>
+          <div class="metric">
+            Service Evidence
+            <strong>GPS, Photos, Signature</strong>
+          </div>
+          <div class="metric">
+            Long-Term Memory
+            <strong>Repeat-Site History</strong>
+          </div>
+        </div>
+        <div class="slide-number">Slide 01</div>
+      </section>
+
+      <section class="slide">
+        <p class="eyebrow">Why It Matters</p>
+        <h2>What this system solves for WES</h2>
+        <div class="triple">
+          <div class="card">
+            <h3>Current field risk</h3>
+            <ul>
+              <li>Job instructions can be fragmented between office and site teams.</li>
+              <li>Repeat sites are hard to brief without a clean history of previous visits.</li>
+              <li>Evidence of work can be inconsistent when photos, notes, and approvals are separated.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>System response</h3>
+            <ul>
+              <li>Admins create and assign jobs from one command dashboard.</li>
+              <li>Technicians execute only their assigned jobs and submit structured reports.</li>
+              <li>Every site keeps a reusable service memory, including past diagnoses and photos.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Management outcome</h3>
+            <ul>
+              <li>Faster dispatch and clearer accountability.</li>
+              <li>Better coaching for revisit jobs and unresolved faults.</li>
+              <li>Higher confidence in approvals, client communication, and audit trails.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-note">
+          Core service lines supported: borehole services, solar energy installation and maintenance, and water treatment services.
+        </div>
+        <div class="slide-number">Slide 02</div>
+      </section>
+
+      <section class="slide">
+        <p class="eyebrow">Access Model</p>
+        <h2>Simple governance: two roles only</h2>
+        <div class="split equal">
+          <div class="card role-card admin">
+            <h3>Admin control</h3>
+            <p><strong>Sang Nicholas, Kirui Isaiah, Judy</strong></p>
+            <ul>
+              <li>Create and assign jobs.</li>
+              <li>View all jobs, all reports, and technician activity.</li>
+              <li>Approve or reject submitted reports.</li>
+              <li>Manage technician records and reset technician passwords.</li>
+              <li>Download approved reports and manage the review queue.</li>
+            </ul>
+          </div>
+          <div class="card role-card tech">
+            <h3>Technician execution</h3>
+            <p><strong>Lewis, Kiptoo, Ndeda, Mutuse, Korir, Richard, Victor</strong></p>
+            <ul>
+              <li>See only assigned jobs.</li>
+              <li>Start jobs, submit reports, and access job locations.</li>
+              <li>Capture unlimited before and after images.</li>
+              <li>Record diagnosis, work done, materials, measurements, and notes.</li>
+              <li>View only their own reports, while still seeing repeat-site history inside assigned jobs.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="role-list">
+          <span class="chip">No extra roles</span>
+          <span class="chip">Role-based visibility</span>
+          <span class="chip">Field and workshop supported</span>
+          <span class="chip">Victor remains a technician</span>
+        </div>
+        <div class="slide-number">Slide 03</div>
+      </section>
+
+      <section class="slide">
+        <p class="eyebrow">Workflow</p>
+        <h2>How the WES service cycle moves through the system</h2>
+        <div class="steps">
+          <div class="step">
+            <span>1</span>
+            <strong>Admin creates the job</strong>
+            <p>Client, site, contact, service type, GPS or manual location, and assigned technician are captured.</p>
+          </div>
+          <div class="step">
+            <span>2</span>
+            <strong>Repeat-site context is attached</strong>
+            <p>Past site visits and reports remain part of the job context so office and field teams start informed.</p>
+          </div>
+          <div class="step">
+            <span>3</span>
+            <strong>Technician starts work</strong>
+            <p>Status moves from Pending to In Progress, keeping the dashboard live and current.</p>
+          </div>
+          <div class="step">
+            <span>4</span>
+            <strong>Field evidence is collected</strong>
+            <p>GPS, time, diagnosis, work done, materials, measurements, and before and after images are captured.</p>
+          </div>
+          <div class="step">
+            <span>5</span>
+            <strong>Client approval is recorded</strong>
+            <p>Name, digital signature, and timestamp are attached to the submitted report.</p>
+          </div>
+          <div class="step">
+            <span>6</span>
+            <strong>Admin reviews and approves</strong>
+            <p>Approved reports become downloadable PDFs and remain permanently attached to the site history.</p>
+          </div>
+        </div>
+        <div class="slide-number">Slide 04</div>
+      </section>
+
+      <section class="slide">
+        <p class="eyebrow">Live Product View</p>
+        <h2>Office command dashboard</h2>
+        <div class="screenshot-panel">
+          <div class="shot-frame">
+            <img src="./assets/02-admin-dashboard.png" alt="Admin dashboard" />
+            <span class="marker" style="top: 72px; right: 84px;">1</span>
+            <span class="marker" style="top: 320px; right: 54px;">2</span>
+            <span class="marker" style="bottom: 98px; left: 226px;">3</span>
+            <span class="marker" style="top: 320px; left: 44px;">4</span>
+          </div>
+          <div class="callout-list">
+            <div class="callout-item">
+              <span>1</span>
+              <div>
+                <strong>Instant management metrics</strong>
+                <p class="small">Active jobs, completed jobs, pending reports, approved reports, and rejected reports are visible on one screen.</p>
+              </div>
+            </div>
+            <div class="callout-item">
+              <span>2</span>
+              <div>
+                <strong>Recent activity feed</strong>
+                <p class="small">Management can see who created, started, submitted, and approved work, with timestamps for accountability.</p>
+              </div>
+            </div>
+            <div class="callout-item">
+              <span>3</span>
+              <div>
+                <strong>Technician activity snapshot</strong>
+                <p class="small">The dashboard shows the workload and current status mix across the technician team.</p>
+              </div>
+            </div>
+            <div class="callout-item">
+              <span>4</span>
+              <div>
+                <strong>Direct page navigation</strong>
+                <p class="small">Dashboard buttons and counters lead to the exact operational page management wants to inspect.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-number">Slide 05</div>
+      </section>
+
+      <section class="slide">
+        <p class="eyebrow">Live Product View</p>
+        <h2>Approval queue and report governance</h2>
+        <div class="approval-gallery-panel">
+          <div class="approval-gallery">
+            <div class="gallery-card">
+              <h3>1. Review queue</h3>
+              <div class="gallery-shot queue">
+                <img src="./assets/03-admin-repeat-site.png" alt="Review queue overview" />
+              </div>
+              <p class="small">Admins move from the command menu into a dedicated review queue instead of searching through jobs manually.</p>
+            </div>
+            <div class="gallery-card">
+              <h3>2. Engineering notes</h3>
+              <div class="gallery-shot notes">
+                <img src="./assets/05-admin-report-detail.png" alt="Engineering notes section" />
+              </div>
+              <p class="small">Diagnosis, work done, technician notes, materials, and measurements are visible before any approval decision is made.</p>
+            </div>
+            <div class="gallery-card">
+              <h3>3. Photo and client proof</h3>
+              <div class="gallery-shot proof">
+                <img src="./assets/05-admin-report-detail.png" alt="Photo evidence and client approval section" />
+              </div>
+              <p class="small">Before-and-after images, client name, signature, and signed time give WES auditable proof of what happened on site.</p>
+            </div>
+            <div class="gallery-card">
+              <h3>4. Repeat-site governance</h3>
+              <div class="gallery-shot history">
+                <img src="./assets/05-admin-report-detail.png" alt="Repeat site history and decision area" />
+              </div>
+              <p class="small">Repeat-site history stays inside the review record so the office can brief the next technician with evidence, not memory.</p>
+            </div>
+          </div>
+          <div class="governance-side">
+            <div class="callout-item">
+              <span>1</span>
+              <div>
+                <strong>Review queue visibility</strong>
+                <p class="small">Admins always see how many reports still need approval from the command menu.</p>
+              </div>
+            </div>
+            <div class="callout-item">
+              <span>2</span>
+              <div>
+                <strong>Full report before approval</strong>
+                <p class="small">The office sees the complete engineering report, not just a summary, before approving or rejecting field work.</p>
+              </div>
+            </div>
+            <div class="callout-item">
+              <span>3</span>
+              <div>
+                <strong>Evidence-led governance</strong>
+                <p class="small">Photo proof, GPS, timestamps, technician notes, and client sign-off are reviewed together so decisions stay defensible.</p>
+              </div>
+            </div>
+            <div class="callout-item">
+              <span>4</span>
+              <div>
+                <strong>Repeat-site memory stays attached</strong>
+                <p class="small">Past site reports remain visible during approval, helping management guide the next technician on unresolved or recurring faults.</p>
+              </div>
+            </div>
+            <div class="governance-rule">
+              <strong>Governance rule built into the workflow</strong>
+              <p class="small">Once a report is approved, it exits the queue permanently and becomes a formal downloadable record for WES and the client.</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">This approval flow protects both operations and management: dispatch is guided by history, and approvals are backed by full site evidence.</div>
+        <div class="slide-number">Slide 06</div>
+      </section>
+
+      <section class="slide">
+        <p class="eyebrow">Live Product View</p>
+        <h2>Full report detail with repeat-site intelligence</h2>
+        <div class="screenshot-panel">
+          <div class="shot-frame">
+            <img src="./assets/05-admin-report-detail.png" alt="Report detail view" />
+            <span class="marker" style="top: 168px; right: 54px;">1</span>
+            <span class="marker" style="bottom: 290px; right: 122px;">2</span>
+            <span class="marker" style="bottom: 188px; right: 88px;">3</span>
+            <span class="marker" style="bottom: 62px; right: 112px;">4</span>
+            <span class="marker" style="bottom: 30px; right: 30px;">5</span>
+          </div>
+          <div class="callout-list">
+            <div class="callout-item">
+              <span>1</span>
+              <div>
+                <strong>Engineering notes</strong>
+                <p class="small">Diagnosis, work done, technician notes, materials used, and measurements are presented in one readable review layout.</p>
+              </div>
+            </div>
+            <div class="callout-item">
+              <span>2</span>
+              <div>
+                <strong>Before and after evidence</strong>
+                <p class="small">Photo evidence is embedded in the report, giving management visual proof of field condition and completion.</p>
+              </div>
+            </div>
+            <div class="callout-item">
+              <span>3</span>
+              <div>
+                <strong>Client approval block</strong>
+                <p class="small">The client name, signature, and signed time are part of the report, reducing disputes after site work.</p>
+              </div>
+            </div>
+            <div class="callout-item">
+              <span>4</span>
+              <div>
+                <strong>Repeat-site history inside the report</strong>
+                <p class="small">Older site visits stay visible here, allowing admins to brief the next technician with real historical evidence.</p>
+              </div>
+            </div>
+            <div class="callout-item">
+              <span>5</span>
+              <div>
+                <strong>PDF export after approval</strong>
+                <p class="small">Once approved, the report becomes a formal downloadable document for office records and client sharing.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-number">Slide 07</div>
+      </section>
+
+      <section class="slide">
+        <p class="eyebrow">Mobile Story</p>
+        <h2>Built for desktop control and field mobility</h2>
+        <div class="split">
+          <div class="phone-frame">
+            <img src="./assets/01-login.png" alt="Mobile-ready login" />
+          </div>
+          <div class="stack">
+            <div class="card">
+              <h3>What the mobile app gives WES</h3>
+              <ul>
+                <li>The same WES workflow can be packaged and installed as an Android APK.</li>
+                <li>Technicians can work from the field using a familiar mobile interface.</li>
+                <li>API server switching supports office testing, local Wi-Fi testing, and future production hosting.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Field-ready data capture</h3>
+              <ul>
+                <li>GPS capture for site evidence.</li>
+                <li>Before and after image capture, including live-photo workflows on phone.</li>
+                <li>Structured notes, materials, measurements, and client signature capture.</li>
+                <li>Sync queue behavior for unstable connectivity and later upload.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Why this matters to management</h3>
+              <p class="small">
+                This is not only a browser dashboard. It is a field-operational platform that can move with technicians while keeping office oversight intact.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="slide-number">Slide 08</div>
+      </section>
+
+      <section class="slide">
+        <p class="eyebrow">Technology And Control</p>
+        <h2>Architecture, security, and scaling path</h2>
+        <div class="architecture">
+          <div class="card">
+            <strong>Frontend</strong>
+            <p class="small">React web application with responsive layouts for desktop and mobile.</p>
+          </div>
+          <div class="card">
+            <strong>Backend</strong>
+            <p class="small">Node.js and Express API handling auth, jobs, reports, search, review queue, and forum messaging.</p>
+          </div>
+          <div class="card">
+            <strong>Data Layer</strong>
+            <p class="small">Current local demo build runs on workspace-backed data; production path supports structured database deployment.</p>
+          </div>
+          <div class="card">
+            <strong>Security</strong>
+            <p class="small">JWT-based access, role-based visibility, protected review flow, and controlled access to technician records.</p>
+          </div>
+          <div class="card">
+            <strong>Mobile Packaging</strong>
+            <p class="small">Android APK delivery through the current wrapper, enabling installation on technician phones.</p>
+          </div>
+        </div>
+
+        <div class="split equal" style="margin-top: 24px;">
+          <div class="card light">
+            <h3>Current demonstration strengths</h3>
+            <ul>
+              <li>Live dashboards and role separation.</li>
+              <li>Approval control and PDF-ready reporting.</li>
+              <li>Repeat-site history visible inside job and report context.</li>
+              <li>Mobile app path already proven with APK packaging.</li>
+            </ul>
+          </div>
+          <div class="card light">
+            <h3>Production hardening path</h3>
+            <ul>
+              <li>Move persistent storage to managed cloud infrastructure.</li>
+              <li>Introduce cloud object storage for image evidence.</li>
+              <li>Set backup, audit, and retention policies.</li>
+              <li>Deploy secure domain, SSL, and admin monitoring.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="slide-number">Slide 09</div>
+      </section>
+
+      <section class="slide">
+        <p class="eyebrow">Management Decision</p>
+        <h2>Recommended rollout plan</h2>
+        <div class="decision-grid">
+          <div class="decision">
+            <strong>Phase 1: Pilot</strong>
+            <p class="small">Run a controlled pilot with the three admins and a small technician group across borehole and water treatment jobs.</p>
+          </div>
+          <div class="decision">
+            <strong>Phase 2: Production setup</strong>
+            <p class="small">Provision hosting, cloud storage, backup policy, and the final production API endpoint for the APK.</p>
+          </div>
+          <div class="decision">
+            <strong>Phase 3: Full deployment</strong>
+            <p class="small">Roll out to the complete technician team, train supervisors, and make report approval part of standard office control.</p>
+          </div>
+        </div>
+
+        <div class="split equal" style="margin-top: 28px;">
+          <div class="card">
+            <h3>What management should approve next</h3>
+            <ul>
+              <li>Pilot scope and owners.</li>
+              <li>Production hosting and storage budget.</li>
+              <li>Approval SLA for report review.</li>
+              <li>Device policy for technician phones.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Expected business result</h3>
+            <p>
+              WES moves from fragmented field coordination to a controlled service operation where the office sees the truth of the job, the technician sees the history of the site, and management has evidence for every completed visit.
+            </p>
+            <p class="accent">This positions WES for stronger service quality, faster decision-making, and better client confidence.</p>
+          </div>
+        </div>
+        <div class="slide-number">Slide 10</div>
+      </section>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+      async function downloadPresentationPdf() {
+        const button = document.getElementById("download-pdf");
+        if (!window.html2canvas || !window.jspdf) {
+          window.alert("PDF tools failed to load. Refresh once, then try again.");
+          return;
+        }
+
+        const originalLabel = button.textContent;
+        button.disabled = true;
+        button.textContent = "Preparing PDF...";
+
+        try {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF({
+            orientation: "landscape",
+            unit: "mm",
+            format: "a4",
+            compress: true
+          });
+
+          const slides = Array.from(document.querySelectorAll(".slide"));
+          const pageWidth = 297;
+          const pageHeight = 210;
+
+          for (let index = 0; index < slides.length; index += 1) {
+            const slide = slides[index];
+            const canvas = await window.html2canvas(slide, {
+              scale: 2,
+              useCORS: true,
+              backgroundColor: "#0c1520",
+              logging: false,
+              windowWidth: slide.scrollWidth,
+              windowHeight: slide.scrollHeight,
+              scrollX: 0,
+              scrollY: -window.scrollY
+            });
+
+            const imageData = canvas.toDataURL("image/jpeg", 0.94);
+            if (index > 0) {
+              pdf.addPage("a4", "landscape");
+            }
+            pdf.addImage(imageData, "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
+          }
+
+          pdf.save("WES-Executive-Presentation.pdf");
+        } catch (error) {
+          console.error(error);
+          window.alert("PDF generation failed. Refresh once and try again.");
+        } finally {
+          button.disabled = false;
+          button.textContent = originalLabel;
+        }
+      }
+
+      window.addEventListener("load", () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("download") === "pdf") {
+          window.setTimeout(() => {
+            downloadPresentationPdf();
+          }, 900);
+        }
+      });
+    </script>
+  </body>
+</html>

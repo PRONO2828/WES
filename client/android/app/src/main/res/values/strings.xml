@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">WES FSM</string>
+    <string name="title_activity_main">WES FSM</string>
+    <string name="package_name">ke.co.wesengineering.fsm</string>
+    <string name="custom_url_scheme">ke.co.wesengineering.fsm</string>
+</resources>
