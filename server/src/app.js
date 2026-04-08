@@ -18,8 +18,6 @@ import usersRouter from "./routes/users.js";
 dotenv.config();
 
 const app = express();
-const allowedOrigins = createAllowedOrigins(process.env.CLIENT_ORIGIN);
-const staticRoot = resolveStaticRoot(process.env.STATIC_ROOT);
 const mobileAppOrigins = [
   "http://localhost",
   "https://localhost",
@@ -28,6 +26,8 @@ const mobileAppOrigins = [
   "capacitor://localhost",
   "ionic://localhost"
 ];
+const allowedOrigins = createAllowedOrigins(process.env.CLIENT_ORIGIN);
+const staticRoot = resolveStaticRoot(process.env.STATIC_ROOT);
 
 function createAllowedOrigins(value) {
   const entries = String(value || "")

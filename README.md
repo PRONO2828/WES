@@ -39,6 +39,19 @@ Helper scripts for the Oracle VM:
 - [run-wes-fsm.sh](/C:/Users/Administrator/Documents/New%20project%204/deploy/oracle/run-wes-fsm.sh)
 - [update-wes-fsm.sh](/C:/Users/Administrator/Documents/New%20project%204/deploy/oracle/update-wes-fsm.sh)
 
+## Cloudflare Tunnel Option
+
+If you want a no-card way to share the app from this PC immediately, use:
+
+- [DEPLOY_CLOUDFLARE_TUNNEL.md](/C:/Users/Administrator/Documents/New%20project%204/docs/DEPLOY_CLOUDFLARE_TUNNEL.md)
+
+Windows helper scripts:
+
+- [start-local-wes-fsm.ps1](/C:/Users/Administrator/Documents/New%20project%204/deploy/cloudflare/start-local-wes-fsm.ps1)
+- [start-quick-tunnel.ps1](/C:/Users/Administrator/Documents/New%20project%204/deploy/cloudflare/start-quick-tunnel.ps1)
+- [start-public-share.ps1](/C:/Users/Administrator/Documents/New%20project%204/deploy/cloudflare/start-public-share.ps1)
+- [stop-public-share.ps1](/C:/Users/Administrator/Documents/New%20project%204/deploy/cloudflare/stop-public-share.ps1)
+
 ## Repository Safety
 
 This repository is prepared for publishing:

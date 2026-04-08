@@ -8,3 +8,5 @@ android-toolchain/
 *.log
 .env
 .env.*
+tmp-cloudflare/
+tools/
