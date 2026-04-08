@@ -40,6 +40,7 @@ $effectiveJwtSecret =
 $env:PORT = [string]$Port
 $env:WES_FSM_LOGIN_PASSWORD = $effectiveLoginPassword
 $env:JWT_SECRET = $effectiveJwtSecret
+$env:STATIC_ROOT = $root
 Set-Location (Join-Path $root 'server')
 
 Write-Host "Starting WES FSM on http://127.0.0.1:$Port/"

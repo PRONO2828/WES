@@ -13,12 +13,12 @@ $tunnelPidLine = $content | Where-Object { $_ -like 'Tunnel PID:*' }
 $serverPid = if ($serverPidLine) { [int]($serverPidLine -replace '^Server PID:\s*', '') } else { $null }
 $tunnelPid = if ($tunnelPidLine) { [int]($tunnelPidLine -replace '^Tunnel PID:\s*', '') } else { $null }
 
-foreach ($pid in @($serverPid, $tunnelPid)) {
-  if ($pid) {
-    $process = Get-Process -Id $pid -ErrorAction SilentlyContinue
+foreach ($procId in @($serverPid, $tunnelPid)) {
+  if ($procId) {
+    $process = Get-Process -Id $procId -ErrorAction SilentlyContinue
     if ($process) {
-      Stop-Process -Id $pid -Force
-      Write-Host "Stopped process $pid"
+      Stop-Process -Id $procId -Force
+      Write-Host "Stopped process $procId"
     }
   }
 }

@@ -63,7 +63,7 @@ function resolveStaticRoot(value) {
     return existsSync(join(candidate, "index.html")) ? candidate : null;
   }
 
-  const defaultRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+  const defaultRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
   return existsSync(join(defaultRoot, "index.html")) ? defaultRoot : null;
 }
 

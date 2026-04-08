@@ -5,8 +5,9 @@ param(
 
 $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $logsDir = Join-Path $root 'tmp-cloudflare'
-$serverScript = Join-Path $root 'deploy\cloudflare\start-local-wes-fsm.ps1'
-$tunnelScript = Join-Path $root 'deploy\cloudflare\start-quick-tunnel.ps1'
+$serverWorkingDir = Join-Path $root 'server'
+$nodeExe = Join-Path $root 'node-portable\node.exe'
+$cloudflaredExe = Join-Path $root 'tools\cloudflared\cloudflared.exe'
 $serverOut = Join-Path $logsDir 'wes-fsm-server.out.log'
 $serverErr = Join-Path $logsDir 'wes-fsm-server.err.log'
 $tunnelOut = Join-Path $logsDir 'cloudflare-tunnel.out.log'
@@ -28,15 +29,22 @@ if (-not $LoginPassword) {
 $jwtSecret = New-RandomHex 32
 New-Item -ItemType Directory -Force -Path $logsDir | Out-Null
 
-$serverProcess = Start-Process -FilePath 'powershell.exe' `
-  -ArgumentList @(
-    '-NoProfile',
-    '-ExecutionPolicy', 'Bypass',
-    '-File', ('"' + $serverScript + '"'),
-    '-Port', "$Port",
-    '-LoginPassword', $LoginPassword,
-    '-JwtSecret', $jwtSecret
-  ) `
+if (-not (Test-Path $nodeExe)) {
+  throw "Node executable was not found at $nodeExe"
+}
+
+if (-not (Test-Path $cloudflaredExe)) {
+  throw "cloudflared executable was not found at $cloudflaredExe"
+}
+
+$env:PORT = "$Port"
+$env:STATIC_ROOT = $root
+$env:WES_FSM_LOGIN_PASSWORD = $LoginPassword
+$env:JWT_SECRET = $jwtSecret
+
+$serverProcess = Start-Process -FilePath $nodeExe `
+  -WorkingDirectory $serverWorkingDir `
+  -ArgumentList @('.\src\index.js') `
   -RedirectStandardOutput $serverOut `
   -RedirectStandardError $serverErr `
   -PassThru
@@ -63,13 +71,8 @@ if (-not $serverReady) {
   throw "WES FSM server did not become healthy at $healthUrl. Check $serverErr and $serverOut."
 }
 
-$tunnelProcess = Start-Process -FilePath 'powershell.exe' `
-  -ArgumentList @(
-    '-NoProfile',
-    '-ExecutionPolicy', 'Bypass',
-    '-File', ('"' + $tunnelScript + '"'),
-    '-LocalUrl', "http://localhost:$Port"
-  ) `
+$tunnelProcess = Start-Process -FilePath $cloudflaredExe `
+  -ArgumentList @('tunnel', '--url', "http://localhost:$Port") `
   -RedirectStandardOutput $tunnelOut `
   -RedirectStandardError $tunnelErr `
   -PassThru
