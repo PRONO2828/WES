@@ -15,8 +15,486 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <script src="/mobile-config.js"></script>
-    <script type="module" crossorigin src="/assets/index-BoSrZqv9.js?v=20260402-fix1"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CHyFpMhi.css?v=20260402-fix1">
+    <script>
+      (() => {
+        try {
+          const storageKey = "wes-api-base-override-v1";
+          const sessionStorageKey = "wes-fsm-session-v1";
+          const introCopy = "Field and office coordination built for borehole, solar, and water treatment execution teams.";
+          const origin = String(globalThis.location?.origin || "").trim();
+          const isHttpOrigin = /^https?:\/\//i.test(origin);
+          const publicApiBase = isHttpOrigin ? `${origin.replace(/\/+$/, "")}/api` : "";
+          const isNative =
+            !!globalThis.Capacitor &&
+            typeof globalThis.Capacitor.isNativePlatform === "function" &&
+            globalThis.Capacitor.isNativePlatform();
+          if (!isNative && isHttpOrigin) {
+            localStorage.setItem(storageKey, publicApiBase);
+          }
+          if (isNative) {
+            const runtimeConfig = globalThis.WES_RUNTIME_CONFIG || {};
+            let nativeApiBase = String(runtimeConfig.apiBaseUrl || "").trim();
+            const remoteConfigUrl = String(runtimeConfig.remoteConfigUrl || "").trim();
+            if (remoteConfigUrl && typeof XMLHttpRequest !== "undefined") {
+              try {
+                const separator = remoteConfigUrl.includes("?") ? "&" : "?";
+                const request = new XMLHttpRequest();
+                request.open("GET", `${remoteConfigUrl}${separator}ts=${Date.now()}`, false);
+                request.send(null);
+                if (request.status >= 200 && request.status < 300 && request.responseText) {
+                  const remoteConfig = JSON.parse(request.responseText);
+                  const remoteApiBase = String(remoteConfig?.apiBaseUrl || "").trim();
+                  if (remoteApiBase) {
+                    nativeApiBase = remoteApiBase;
+                  }
+                }
+              } catch {}
+            }
+            if (nativeApiBase) {
+              localStorage.setItem(storageKey, nativeApiBase.replace(/\/+$/, ""));
+            }
+          }
+
+          if (!isNative && "serviceWorker" in navigator) {
+            navigator.serviceWorker
+              .getRegistrations()
+              .then((registrations) =>
+                Promise.all(registrations.map((registration) => registration.unregister().catch(() => false)))
+              )
+              .catch(() => {});
+          }
+
+          if (!isNative && "caches" in globalThis && typeof caches.keys === "function") {
+            caches
+              .keys()
+              .then((keys) => Promise.all(keys.map((key) => caches.delete(key).catch(() => false))))
+              .catch(() => {});
+          }
+
+          const resolveApiBase = () => {
+            const override = String(localStorage.getItem(storageKey) || "").trim();
+            if (/^https?:\/\//i.test(override)) {
+              return override.replace(/\/+$/, "");
+            }
+            return publicApiBase;
+          };
+
+          const readSession = () => {
+            try {
+              return JSON.parse(localStorage.getItem(sessionStorageKey) || "null");
+            } catch {
+              return null;
+            }
+          };
+
+          const sendPresence = (online, useBeacon = false) => {
+            const session = readSession();
+            const token = String(session?.token || "").trim();
+            const apiBase = resolveApiBase();
+
+            if (!token || !apiBase) {
+              return;
+            }
+
+            if (!online) {
+              const logoutUrl = `${apiBase}/auth/logout?token=${encodeURIComponent(token)}`;
+              if (useBeacon && typeof navigator.sendBeacon === "function") {
+                navigator.sendBeacon(logoutUrl, new Blob([], { type: "application/json" }));
+                return;
+              }
+              fetch(logoutUrl, { method: "POST", keepalive: true }).catch(() => {});
+              return;
+            }
+
+            fetch(`${apiBase}/auth/presence`, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ online: true }),
+              keepalive: true
+            }).catch(() => {});
+          };
+
+          const presenceLoop = { timerId: 0 };
+          const stopPresenceLoop = () => {
+            if (presenceLoop.timerId) {
+              clearInterval(presenceLoop.timerId);
+              presenceLoop.timerId = 0;
+            }
+          };
+
+          const startPresenceLoop = () => {
+            stopPresenceLoop();
+            if (document.visibilityState === "hidden") {
+              return;
+            }
+            const session = readSession();
+            if (!session?.token) {
+              return;
+            }
+            sendPresence(true);
+            presenceLoop.timerId = window.setInterval(() => sendPresence(true), 45000);
+          };
+
+          window.addEventListener("storage", (event) => {
+            if (!event.key || event.key === sessionStorageKey || event.key === storageKey) {
+              startPresenceLoop();
+            }
+          });
+          window.addEventListener("pageshow", startPresenceLoop);
+          window.addEventListener("focus", startPresenceLoop);
+          window.addEventListener("pagehide", () => {
+            stopPresenceLoop();
+            sendPresence(false, true);
+          });
+          document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "hidden") {
+              stopPresenceLoop();
+              return;
+            }
+            startPresenceLoop();
+          });
+          setTimeout(startPresenceLoop, 0);
+
+          if (typeof MutationObserver !== "undefined") {
+            const usernameStateKey = "__wesUsernameLoginValue";
+            const activityColumns = ["Technician", "Assigned", "Pending", "In Progress", "Completed", "Reports"];
+            const createCell = (tagName, className, text) => {
+              const node = document.createElement(tagName);
+              node.className = className;
+              node.textContent = text;
+              return node;
+            };
+
+            const buildActivityHeader = () => {
+              const header = document.createElement("div");
+              header.className = "wes-activity-header";
+              activityColumns.forEach((label, index) => {
+                header.appendChild(createCell("span", index === 0 ? "wes-activity-heading is-name" : "wes-activity-heading", label));
+              });
+              return header;
+            };
+
+            const readMetricValue = (text, label) => {
+              const trimmed = String(text || "").trim();
+              if (!trimmed) {
+                return "0";
+              }
+              if (trimmed.toLowerCase().startsWith(label.toLowerCase())) {
+                return trimmed.slice(label.length).trim() || "0";
+              }
+              const match = trimmed.match(/-?\d+(?:\.\d+)?/);
+              return match ? match[0] : trimmed;
+            };
+
+            const applyWorkspaceChrome = () => {
+              document.querySelectorAll(".back-button").forEach((button) => {
+                if (button.textContent.trim() !== "Back") {
+                  button.textContent = "Back";
+                }
+              });
+
+              document.querySelectorAll("header.topbar.surface").forEach((header) => {
+                const topbarRow = header.querySelector(".topbar-row");
+                const brand = header.querySelector(".compact-brand");
+                if (!topbarRow || !brand) {
+                  return;
+                }
+
+                let brandRow = header.querySelector(".wes-topbar-brand-row");
+                if (!brandRow) {
+                  brandRow = document.createElement("div");
+                  brandRow.className = "wes-topbar-brand-row";
+                  topbarRow.insertAdjacentElement("afterend", brandRow);
+                }
+
+                if (brand.parentElement !== brandRow) {
+                  brandRow.appendChild(brand);
+                }
+              });
+
+              const activitySection = Array.from(document.querySelectorAll("section.surface.section-card")).find(
+                (section) => section.querySelector("h2")?.textContent.trim() === "Activity Snapshot"
+              );
+
+              if (!activitySection) {
+                return;
+              }
+
+              const table = activitySection.querySelector(".table-like");
+              if (!table) {
+                return;
+              }
+
+              table.classList.add("wes-activity-table");
+
+              if (!table.querySelector(".wes-activity-header")) {
+                table.prepend(buildActivityHeader());
+              }
+
+              table.querySelectorAll(".table-row").forEach((row) => {
+                row.classList.add("wes-activity-row");
+
+                if (row.dataset.wesActivityEnhanced === "true") {
+                  return;
+                }
+
+                const nodes = Array.from(row.children);
+                const technicianName = nodes[0]?.textContent.trim() || "Technician";
+                const metrics = activityColumns.slice(1).map((label, index) => ({
+                  label,
+                  value: readMetricValue(nodes[index + 1]?.textContent, label)
+                }));
+
+                row.replaceChildren();
+
+                const nameCell = document.createElement("div");
+                nameCell.className = "wes-activity-cell wes-activity-technician";
+                nameCell.appendChild(createCell("strong", "wes-activity-name", technicianName));
+                row.appendChild(nameCell);
+
+                metrics.forEach((metric) => {
+                  const cell = document.createElement("div");
+                  cell.className = "wes-activity-cell wes-activity-metric";
+                  cell.appendChild(createCell("span", "wes-activity-metric-label", metric.label));
+                  cell.appendChild(createCell("strong", "wes-activity-metric-value", metric.value));
+                  row.appendChild(cell);
+                });
+
+                row.dataset.wesActivityEnhanced = "true";
+              });
+            };
+
+            const applyUsernameLogin = () => {
+              const selects = document.querySelectorAll('select[name="identity"]');
+
+              selects.forEach((select) => {
+                const label = select.closest("label");
+                const existingInput = label?.querySelector('input[name="identity"]');
+                const savedValue = String(globalThis[usernameStateKey] || "");
+
+                if (existingInput) {
+                  if (savedValue && existingInput.value !== savedValue) {
+                    existingInput.value = savedValue;
+                  }
+                  select.remove();
+                  return;
+                }
+
+                const input = document.createElement("input");
+                input.name = "identity";
+                input.type = "text";
+                input.required = true;
+                input.autocomplete = "username";
+                input.placeholder = "Enter your username";
+                input.value = savedValue;
+                input.addEventListener("input", () => {
+                  globalThis[usernameStateKey] = input.value;
+                });
+
+                select.replaceWith(input);
+
+                const fieldLabel = label?.querySelector("span");
+                if (fieldLabel && fieldLabel.textContent.trim() === "Account") {
+                  fieldLabel.textContent = "Username";
+                }
+              });
+
+              document.querySelectorAll("p.meta-copy.full-span").forEach((node) => {
+                if (node.textContent.includes("Login password")) {
+                  node.textContent = "Use the username and password assigned to you.";
+                }
+              });
+
+              document.querySelectorAll("label.field.full-span").forEach((label) => {
+                const caption = label.querySelector("span");
+                if (caption && caption.textContent.trim() === "API Server (Optional for Android)") {
+                  label.remove();
+                }
+              });
+
+              document.querySelectorAll("p.meta-copy.full-span").forEach((node) => {
+                if (node.textContent.includes("Leave blank on this PC")) {
+                  node.remove();
+                }
+              });
+
+              const introNode = Array.from(document.querySelectorAll("p")).find(
+                (node) => node.textContent.trim() === introCopy
+              );
+              if (introNode) {
+                introNode.remove();
+              }
+
+              const storyCards = document.querySelector(".story-cards");
+              const loginPanel = document.querySelector("article.login-panel");
+              if (storyCards && loginPanel && storyCards.parentElement && loginPanel !== storyCards.previousElementSibling) {
+                storyCards.parentElement.insertBefore(loginPanel, storyCards);
+              }
+
+              applyWorkspaceChrome();
+            };
+
+            applyUsernameLogin();
+            new MutationObserver(() => applyUsernameLogin()).observe(document.documentElement, {
+              childList: true,
+              subtree: true
+            });
+          }
+
+          if (!isNative && publicApiBase && typeof globalThis.fetch === "function" && !globalThis.__wesFetchPatched) {
+            const originalFetch = globalThis.fetch.bind(globalThis);
+            const absoluteApiPattern = /^https?:\/\/[^/]+\/api(?=\/|$)/i;
+            globalThis.fetch = (input, init) => {
+              if (typeof input === "string") {
+                return originalFetch(input.replace(absoluteApiPattern, publicApiBase), init);
+              }
+
+              if (input instanceof URL) {
+                return originalFetch(new URL(input.href.replace(absoluteApiPattern, publicApiBase)), init);
+              }
+
+              if (input instanceof Request) {
+                const rewrittenUrl = input.url.replace(absoluteApiPattern, publicApiBase);
+                return originalFetch(rewrittenUrl === input.url ? input : new Request(rewrittenUrl, input), init);
+              }
+
+              return originalFetch(input, init);
+            };
+            globalThis.__wesFetchPatched = true;
+          }
+        } catch (error) {
+          console.warn("WES runtime API bootstrap failed", error);
+        }
+      })();
+    </script>
+    <style>
+      .wes-topbar-brand-row {
+        display: grid;
+        margin-top: 12px;
+      }
+
+      .wes-topbar-brand-row .compact-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .wes-topbar-brand-row .compact-brand-logo {
+        width: 58px;
+      }
+
+      .wes-topbar-brand-row .compact-brand-copy strong {
+        font-size: 1rem;
+      }
+
+      .wes-topbar-brand-row .compact-brand-copy .meta-copy {
+        line-height: 1.3;
+      }
+
+      .wes-activity-table {
+        display: grid;
+        gap: 10px;
+        overflow-x: auto;
+      }
+
+      .wes-activity-header,
+      .wes-activity-row {
+        display: grid;
+        grid-template-columns: minmax(150px, 1.8fr) repeat(5, minmax(88px, 1fr));
+        align-items: center;
+        gap: 12px;
+      }
+
+      .wes-activity-header {
+        padding: 0 14px;
+        color: var(--muted);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .wes-activity-heading {
+        text-align: center;
+      }
+
+      .wes-activity-heading.is-name,
+      .wes-activity-technician {
+        text-align: left;
+      }
+
+      .wes-activity-row {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .wes-activity-cell {
+        min-width: 0;
+      }
+
+      .wes-activity-metric {
+        text-align: center;
+      }
+
+      .wes-activity-metric-label {
+        display: none;
+      }
+
+      @media (max-width: 720px) {
+        .wes-topbar-brand-row .compact-brand {
+          padding: 10px 12px;
+        }
+
+        .wes-topbar-brand-row .compact-brand-logo {
+          width: 48px;
+        }
+
+        .wes-activity-header {
+          display: none;
+        }
+
+        .wes-activity-row {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .wes-activity-technician {
+          grid-column: 1 / -1;
+          padding-bottom: 8px;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .wes-activity-metric {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          padding: 10px 12px;
+          border: 1px solid var(--line);
+          border-radius: 14px;
+          background: rgba(255, 255, 255, 0.04);
+          text-align: left;
+        }
+
+        .wes-activity-metric-label {
+          display: inline;
+          color: var(--muted);
+          font-size: 0.78rem;
+          font-weight: 600;
+        }
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-BoSrZqv9.js?v=20260409-runtimeconfig"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CHyFpMhi.css?v=20260409-runtimeconfig">
   </head>
   <body>
     <div id="root"></div>
